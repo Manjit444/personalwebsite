@@ -9,27 +9,27 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0D0D0D;--surface:#1A1A1A;--surface2:#222;
-  --accent:#DA7756;--blue:#4A7FA5;--text:#E8E0D8;--muted:#888880;--border:#2A2A2A;
+--bg:#0D0D0D;--surface:#1A1A1A;--surface2:#222;
+--accent:#DA7756;--blue:#4A7FA5;--text:#E8E0D8;--muted:#888880;--border:#2A2A2A;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
 
 /* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 56px;
-  background:rgba(13,13,13,0);
-  backdrop-filter:blur(0px);
-  border-bottom:1px solid transparent;
-  transition:all .4s ease;
+position:fixed;top:0;left:0;right:0;z-index:200;
+display:flex;align-items:center;justify-content:space-between;
+padding:20px 56px;
+background:rgba(13,13,13,0);
+backdrop-filter:blur(0px);
+border-bottom:1px solid transparent;
+transition:all .4s ease;
 }
 nav.scrolled{
-  background:rgba(13,13,13,.9);
-  backdrop-filter:blur(16px);
-  border-bottom-color:var(--border);
-  padding:14px 56px;
+background:rgba(13,13,13,.9);
+backdrop-filter:blur(16px);
+border-bottom-color:var(--border);
+padding:14px 56px;
 }
 .nav-logo{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:.5px}
 .nav-links{display:flex;gap:36px;list-style:none}
@@ -42,15 +42,15 @@ nav.scrolled{
 /* ── WORD REVEAL ANIMATION ── */
 .reveal-wrap{overflow:hidden;display:inline-block}
 .reveal-word{
-  display:inline-block;
-  transform:translateY(110%) rotate(3deg);
-  opacity:0;
-  transition:none;
+display:inline-block;
+transform:translateY(110%) rotate(3deg);
+opacity:0;
+transition:none;
 }
 .reveal-word.in{
-  transform:translateY(0) rotate(0deg);
-  opacity:1;
-  transition:transform .75s cubic-bezier(.16,1,.3,1), opacity .5s ease;
+transform:translateY(0) rotate(0deg);
+opacity:1;
+transition:transform .75s cubic-bezier(.16,1,.3,1), opacity .5s ease;
 }
 /* For block-level reveals (paragraphs, cards etc) */
 .fade-up{opacity:0;transform:translateY(36px);transition:none}
@@ -58,52 +58,52 @@ nav.scrolled{
 
 /* ── HERO ── */
 #hero{
-  min-height:100vh;display:flex;align-items:center;
-  padding:140px 56px 100px;max-width:1200px;margin:0 auto;gap:80px;
+min-height:100vh;display:flex;align-items:center;
+padding:140px 56px 100px;max-width:1200px;margin:0 auto;gap:80px;
 }
 .hero-left{flex:1}
 .hero-tag{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);
-  background:rgba(218,119,86,.08);border:1px solid rgba(218,119,86,.2);
-  padding:6px 16px;border-radius:20px;margin-bottom:32px;letter-spacing:.5px;
+display:inline-flex;align-items:center;gap:8px;
+font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);
+background:rgba(218,119,86,.08);border:1px solid rgba(218,119,86,.2);
+padding:6px 16px;border-radius:20px;margin-bottom:32px;letter-spacing:.5px;
 }
 .hero-tag .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 
 .hero-name{
-  font-size:clamp(3rem,6vw,5rem);font-weight:800;line-height:1.05;
-  margin-bottom:8px;letter-spacing:-1px;
+font-size:clamp(3rem,6vw,5rem);font-weight:800;line-height:1.05;
+margin-bottom:8px;letter-spacing:-1px;
 }
 .hero-name .accent{color:var(--accent)}
 .hero-name-line{display:block;overflow:hidden;padding-bottom:4px}
 
 .hero-role{
-  font-size:clamp(1rem,2vw,1.3rem);color:var(--muted);
-  margin-bottom:28px;min-height:2.2em;
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+font-size:clamp(1rem,2vw,1.3rem);color:var(--muted);
+margin-bottom:28px;min-height:2.2em;
+display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
 .hero-role-static{color:var(--muted)}
 .hero-type{color:var(--blue);font-weight:500}
 .cursor-blink{
-  display:inline-block;width:2px;height:1.1em;
-  background:var(--accent);vertical-align:middle;
-  animation:blink .7s step-end infinite;margin-left:1px;
+display:inline-block;width:2px;height:1.1em;
+background:var(--accent);vertical-align:middle;
+animation:blink .7s step-end infinite;margin-left:1px;
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
 .hero-desc{font-size:15px;color:var(--muted);max-width:480px;line-height:1.8;margin-bottom:40px}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
 .btn-primary{
-  background:var(--accent);color:#fff;padding:13px 30px;
-  border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;
-  transition:opacity .2s,transform .2s;display:inline-block;
+background:var(--accent);color:#fff;padding:13px 30px;
+border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;
+transition:opacity .2s,transform .2s;display:inline-block;
 }
 .btn-primary:hover{opacity:.88;transform:translateY(-1px)}
 .btn-secondary{
-  border:1px solid var(--border);color:var(--text);padding:13px 30px;
-  border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;
-  transition:border-color .2s,color .2s;display:inline-block;
+border:1px solid var(--border);color:var(--text);padding:13px 30px;
+border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;
+transition:border-color .2s,color .2s;display:inline-block;
 }
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
 .hero-stats{display:flex;gap:48px;padding-top:40px;border-top:1px solid var(--border)}
@@ -112,24 +112,24 @@ nav.scrolled{
 
 .hero-photo{flex-shrink:0}
 .hero-photo-frame{
-  position:relative;width:340px;
+position:relative;width:340px;
 }
 .hero-photo img{
-  width:340px;height:400px;object-fit:cover;object-position:top center;
-  border-radius:0;border:none;box-shadow:none;display:block;
-  filter:grayscale(100%) contrast(1.05);
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 18%),linear-gradient(to left,black 45%,transparent 95%);
-  -webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to bottom,transparent 0%,black 18%),linear-gradient(to left,black 45%,transparent 95%);
-  mask-composite:intersect;
-  transition:filter .4s ease;
+width:340px;height:400px;object-fit:cover;object-position:top center;
+border-radius:0;border:none;box-shadow:none;display:block;
+filter:grayscale(100%) contrast(1.05);
+-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 18%),linear-gradient(to left,black 45%,transparent 95%);
+-webkit-mask-composite:source-in;
+mask-image:linear-gradient(to bottom,transparent 0%,black 18%),linear-gradient(to left,black 45%,transparent 95%);
+mask-composite:intersect;
+transition:filter .4s ease;
 }
 .hero-photo img:hover{filter:grayscale(0%) contrast(1)}
 .hero-photo-placeholder{
-  width:340px;height:400px;border-radius:20px;border:1px dashed var(--border);
-  background:var(--surface);display:flex;align-items:center;justify-content:center;
-  font-size:80px;font-weight:800;color:var(--accent);opacity:.2;
-  font-family:'JetBrains Mono',monospace;
+width:340px;height:400px;border-radius:20px;border:1px dashed var(--border);
+background:var(--surface);display:flex;align-items:center;justify-content:center;
+font-size:80px;font-weight:800;color:var(--accent);opacity:.2;
+font-family:'JetBrains Mono',monospace;
 }
 
 /* ── DIVIDER ── */
@@ -138,12 +138,12 @@ hr{border:none;border-top:1px solid var(--border);max-width:1200px;margin:0 auto
 /* ── SECTIONS ── */
 section{padding:100px 56px;max-width:1200px;margin:0 auto}
 .sec-label{
-  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);
-  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;display:block;
+font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);
+letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;display:block;
 }
 .sec-title{
-  font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;
-  margin-bottom:60px;letter-spacing:-0.5px;
+font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;
+margin-bottom:60px;letter-spacing:-0.5px;
 }
 .sec-title .accent{color:var(--accent)}
 .sec-title-wrap{overflow:hidden}
@@ -156,9 +156,9 @@ section{padding:100px 56px;max-width:1200px;margin:0 auto}
 .about-text p strong{color:var(--text);font-weight:600}
 .about-cards{display:flex;flex-direction:column;gap:14px}
 .about-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-left:3px solid var(--accent);border-radius:10px;padding:20px 22px;
-  transition:border-color .2s;
+background:var(--surface);border:1px solid var(--border);
+border-left:3px solid var(--accent);border-radius:10px;padding:20px 22px;
+transition:border-color .2s;
 }
 .about-card:hover{border-color:rgba(218,119,86,.5)}
 .about-card h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px}
@@ -169,30 +169,30 @@ section{padding:100px 56px;max-width:1200px;margin:0 auto}
 .timeline::before{content:'';position:absolute;left:0;top:8px;bottom:0;width:1px;background:var(--border)}
 .tl-item{padding-left:40px;margin-bottom:52px;position:relative}
 .tl-item::before{
-  content:'';position:absolute;left:-5px;top:9px;
-  width:11px;height:11px;border-radius:50%;
-  background:var(--surface);border:2px solid var(--border);
-  transition:border-color .3s;
+content:'';position:absolute;left:-5px;top:9px;
+width:11px;height:11px;border-radius:50%;
+background:var(--surface);border:2px solid var(--border);
+transition:border-color .3s;
 }
 .tl-item:first-child::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 14px rgba(218,119,86,.4)}
 .tl-meta{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
 .tl-period{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue)}
 .tl-badge{
-  font-size:10px;font-weight:700;
-  background:rgba(218,119,86,.1);color:var(--accent);
-  border:1px solid rgba(218,119,86,.2);padding:2px 10px;border-radius:10px;
-  text-transform:uppercase;letter-spacing:.5px;
+font-size:10px;font-weight:700;
+background:rgba(218,119,86,.1);color:var(--accent);
+border:1px solid rgba(218,119,86,.2);padding:2px 10px;border-radius:10px;
+text-transform:uppercase;letter-spacing:.5px;
 }
 .tl-role{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
 .tl-company{font-size:13px;color:var(--muted);margin-bottom:16px}
 .tl-stack{
-  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);
-  margin-top:4px;
+font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);
+margin-top:4px;
 }
 .tl-bullets{list-style:none}
 .tl-bullets li{
-  font-size:13.5px;color:var(--muted);line-height:1.75;
-  margin-bottom:8px;padding-left:18px;position:relative;
+font-size:13.5px;color:var(--muted);line-height:1.75;
+margin-bottom:8px;padding-left:18px;position:relative;
 }
 .tl-bullets li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:3px}
 .tl-bullets li strong{color:var(--text);font-weight:600}
@@ -200,20 +200,20 @@ section{padding:100px 56px;max-width:1200px;margin:0 auto}
 /* ── PROJECTS ── */
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
 .proj-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:28px;position:relative;overflow:hidden;
-  transition:border-color .3s,transform .3s;cursor:default;
+background:var(--surface);border:1px solid var(--border);
+border-radius:14px;padding:28px;position:relative;overflow:hidden;
+transition:border-color .3s,transform .3s;cursor:default;
 }
 .proj-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  transform:scaleX(0);transition:transform .4s ease;
+content:'';position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,var(--accent),transparent);
+transform:scaleX(0);transition:transform .4s ease;
 }
 .proj-card:hover{border-color:rgba(218,119,86,.25);transform:translateY(-4px)}
 .proj-card:hover::before{transform:scaleX(1)}
 .proj-icon{width:44px;height:44px;border-radius:10px;
-  background:rgba(218,119,86,.08);border:1px solid rgba(218,119,86,.18);
-  display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+background:rgba(218,119,86,.08);border:1px solid rgba(218,119,86,.18);
+display:flex;align-items:center;justify-content:center;margin-bottom:18px}
 .proj-icon svg{width:20px;height:20px;stroke:var(--accent);stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .about-card h4{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px}
 .about-card h4 svg{width:16px;height:16px;stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
@@ -222,33 +222,33 @@ section{padding:100px 56px;max-width:1200px;margin:0 auto}
 .proj-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
 .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
 .tag{
-  font-size:10px;font-weight:500;background:var(--surface2);
-  color:var(--muted);border:1px solid var(--border);
-  padding:3px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;
+font-size:10px;font-weight:500;background:var(--surface2);
+color:var(--muted);border:1px solid var(--border);
+padding:3px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;
 }
 .proj-link{font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;transition:color .2s}
 .proj-link:hover{color:var(--accent)}
 .proj-soon{
-  font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;
-  background:var(--surface2);border:1px solid var(--border);
-  padding:3px 10px;border-radius:4px;
+font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;
+background:var(--surface2);border:1px solid var(--border);
+padding:3px 10px;border-radius:4px;
 }
 
 /* ── SKILLS ── */
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
 .skill-group{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;
+background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;
 }
 .skill-group-title{
-  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-  color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;
+font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;
 }
 .skill-tags{display:flex;flex-wrap:wrap;gap:7px}
 .skill-tag{
-  font-size:11px;font-weight:500;font-family:'JetBrains Mono',monospace;
-  background:var(--surface2);color:var(--text);
-  border:1px solid var(--border);padding:5px 11px;border-radius:5px;
-  transition:border-color .2s,color .2s;cursor:default;
+font-size:11px;font-weight:500;font-family:'JetBrains Mono',monospace;
+background:var(--surface2);color:var(--text);
+border:1px solid var(--border);padding:5px 11px;border-radius:5px;
+transition:border-color .2s,color .2s;cursor:default;
 }
 .skill-tag:hover{border-color:var(--accent);color:var(--accent)}
 
@@ -257,36 +257,36 @@ section{padding:100px 56px;max-width:1200px;margin:0 auto}
 .contact-sub{font-size:15px;color:var(--muted);max-width:460px;margin:0 auto 44px;line-height:1.8}
 .contact-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .contact-link{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text);text-decoration:none;padding:13px 22px;
-  border-radius:10px;font-size:13px;font-weight:500;
-  transition:border-color .2s,color .2s,transform .2s;
+display:flex;align-items:center;gap:10px;
+background:var(--surface);border:1px solid var(--border);
+color:var(--text);text-decoration:none;padding:13px 22px;
+border-radius:10px;font-size:13px;font-weight:500;
+transition:border-color .2s,color .2s,transform .2s;
 }
 .contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
 .contact-link svg{width:17px;height:17px;flex-shrink:0}
 
 /* ── FOOTER ── */
 footer{
-  border-top:1px solid var(--border);padding:28px 56px;
-  display:flex;align-items:center;justify-content:space-between;
-  max-width:1200px;margin:0 auto;
+border-top:1px solid var(--border);padding:28px 56px;
+display:flex;align-items:center;justify-content:space-between;
+max-width:1200px;margin:0 auto;
 }
 footer p{font-size:12px;color:var(--muted)}
 footer a{color:var(--accent);text-decoration:none}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
-  nav,nav.scrolled{padding:14px 24px}
-  .nav-links{display:none}
-  #hero{flex-direction:column-reverse;padding:100px 24px 60px;gap:40px;text-align:center}
-  .hero-btns{justify-content:center}
-  .hero-stats{justify-content:center}
-  .hero-photo-frame{width:100%;display:flex;justify-content:center}
-  .hero-photo img,.hero-photo-placeholder{width:220px;height:260px}
-  section{padding:60px 24px}
-  .about-grid{grid-template-columns:1fr;gap:32px}
-  footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
+nav,nav.scrolled{padding:14px 24px}
+.nav-links{display:none}
+#hero{flex-direction:column-reverse;padding:100px 24px 60px;gap:40px;text-align:center}
+.hero-btns{justify-content:center}
+.hero-stats{justify-content:center}
+.hero-photo-frame{width:100%;display:flex;justify-content:center}
+.hero-photo img,.hero-photo-placeholder{width:220px;height:260px}
+section{padding:60px 24px}
+.about-grid{grid-template-columns:1fr;gap:32px}
+footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
 }
 </style>
 </head>
@@ -295,374 +295,376 @@ footer a{color:var(--accent);text-decoration:none}
 <!-- ─── CONFIG — EDIT THESE ─── -->
 <script>
 const CONFIG = {
-  openToWork:   true,   // ← set false to hide "Open to Opportunities" badge
-  showHireMe:   true,   // ← set false to hide "Hire Me" nav button
-  email:        'manjit444manjit@gmail.com',
-  linkedin:     'https://linkedin.com/in/manjit-sithuraj',
-  github:       'https://github.com/manjit444',
-  resumeUrl:    'Manjit_Sithuraj_Resume_Print.pdf',
+openToWork: true, // ← set false to hide "Open to Opportunities" badge
+showHireMe: true, // ← set false to hide "Hire Me" nav button
+email: 'manjit444manjit@gmail.com',
+linkedin: 'https://linkedin.com/in/manjit-sithuraj',
+github: 'https://github.com/manjit444',
+resumeUrl: 'Manjit_Sithuraj_Resume_Print.pdf',
 };
 </script>
 
 <!-- ─── NAV ─── -->
 <nav id="mainNav">
-  <a class="nav-logo" href="#hero">smanjit.com</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-right" id="navRight"></div>
+<a class="nav-logo" href="#hero">smanjit.com</a>
+<ul class="nav-links">
+<li><a href="#about">About</a></li>
+<li><a href="#experience">Experience</a></li>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="blog/story-to-pr-pipeline.html" style="color:var(--accent)">Blog</a></li>
+</ul>
+<div class="nav-right" id="navRight"></div>
 </nav>
 
 <!-- ─── HERO ─── -->
 <div id="hero">
-  <div class="hero-left">
-    <div class="hero-tag" id="heroTag" style="display:none">
-      <span class="dot"></span>
-      Open to Opportunities
-    </div>
-    <h1 class="hero-name" aria-label="Manjit Sithuraj">
-      <span class="hero-name-line">
-        <span class="reveal-wrap"><span class="reveal-word" id="hw1">Manjit</span></span>
-      </span>
-      <span class="hero-name-line">
-        <span class="reveal-wrap"><span class="reveal-word accent" id="hw2">Sithuraj</span></span>
-      </span>
-    </h1>
-    <div class="hero-role">
-      <span class="hero-role-static">I build</span>
-      <span class="hero-type" id="heroType"></span>
-      <span class="cursor-blink"></span>
-    </div>
-    <p class="hero-desc fade-up">
-      Product Engineer crafting AI-powered enterprise systems for European SaaS —
-      from intelligent agents to resilient backends to the infrastructure that ties them together.
-    </p>
-    <div class="hero-btns fade-up">
-      <a class="btn-primary" href="#experience">View My Work</a>
-      <a class="btn-secondary" id="resumeBtn" href="#">Download Resume</a>
-    </div>
-    <div class="hero-stats fade-up">
-      <div>
-        <div class="stat-num">3+</div>
-        <div class="stat-label">Years Experience</div>
-      </div>
-      <div>
-        <div class="stat-num">240+</div>
-        <div class="stat-label">Norwegian Municipalities</div>
-      </div>
-      <div>
-        <div class="stat-num">17</div>
-        <div class="stat-label">Agent Pipeline</div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-photo">
-    <div class="hero-photo-frame fade-up">
-      <img src="profile.jpg" alt="Manjit Sithuraj"
-        onerror="this.outerHTML='<div class=hero-photo-placeholder>MS</div>'" />
-    </div>
-  </div>
+<div class="hero-left">
+<div class="hero-tag" id="heroTag" style="display:none">
+<span class="dot"></span>
+Open to Opportunities
+</div>
+<h1 class="hero-name" aria-label="Manjit Sithuraj">
+<span class="hero-name-line">
+<span class="reveal-wrap"><span class="reveal-word" id="hw1">Manjit</span></span>
+</span>
+<span class="hero-name-line">
+<span class="reveal-wrap"><span class="reveal-word accent" id="hw2">Sithuraj</span></span>
+</span>
+</h1>
+<div class="hero-role">
+<span class="hero-role-static">I build</span>
+<span class="hero-type" id="heroType"></span>
+<span class="cursor-blink"></span>
+</div>
+<p class="hero-desc fade-up">
+Product Engineer crafting AI-powered enterprise systems for European SaaS —
+from intelligent agents to resilient backends to the infrastructure that ties them together.
+</p>
+<div class="hero-btns fade-up">
+<a class="btn-primary" href="#experience">View My Work</a>
+<a class="btn-secondary" id="resumeBtn" href="#">Download Resume</a>
+</div>
+<div class="hero-stats fade-up">
+<div>
+<div class="stat-num">3+</div>
+<div class="stat-label">Years Experience</div>
+</div>
+<div>
+<div class="stat-num">240+</div>
+<div class="stat-label">Norwegian Municipalities</div>
+</div>
+<div>
+<div class="stat-num">20</div>
+<div class="stat-label">Agent Pipeline</div>
+</div>
+</div>
+</div>
+<div class="hero-photo">
+<div class="hero-photo-frame fade-up">
+<img src="profile.jpg" alt="Manjit Sithuraj"
+onerror="this.outerHTML='<div class=hero-photo-placeholder>MS</div>'" />
+</div>
+</div>
 </div>
 
 <hr/>
 
 <!-- ─── ABOUT ─── -->
 <section id="about">
-  <span class="sec-label">01 — About</span>
-  <h2 class="sec-title">
-    <span class="sec-title-wrap"><span class="sec-title-inner">The person behind the <span class="accent">code</span></span></span>
-  </h2>
-  <div class="about-grid">
-    <div class="about-text">
-      <p class="fade-up">
-        I'm a <strong>Product Engineer</strong> based in Bengaluru, India, currently building
-        AI-powered financial reporting tools for Norwegian municipalities at <strong>Framsikt AS</strong>.
-        My work sits at the intersection of backend engineering, AI systems, and product thinking.
-      </p>
-      <p class="fade-up" style="transition-delay:.1s">
-        I started as an Electronics &amp; Communication engineer and moved into software — drawn by the
-        ability to build things that scale. Over 3 years, I've shipped <strong>multi-agent LLM pipelines</strong>,
-        government API integrations, frontend architecture rewrites, and an 80% cloud cost reduction.
-      </p>
-      <p class="fade-up" style="transition-delay:.2s">
-        Outside work, I co-founded <strong>Cerebral Bridge</strong> — an AI learning platform. I'm also
-        working toward a <strong>Germany Masters</strong> in management, because the best engineers
-        eventually become the people who decide what gets built.
-      </p>
-    </div>
-    <div class="about-cards">
-      <div class="about-card fade-up" style="transition-delay:.05s">
-        <h4><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5V11h2a2 2 0 0 1 2 2v1h1a2 2 0 0 1 0 4h-1v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1H5a2 2 0 0 1 0-4h1v-1a2 2 0 0 1 2-2h2V9.5A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/><circle cx="9" cy="15" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1" fill="currentColor" stroke="none"/></svg>AI Systems</h4>
-        <p>17-agent pipelines, RAG, multi-tenant AI assistants hardened against prompt injection — backed by 90+ security tests.</p>
-      </div>
-      <div class="about-card fade-up" style="transition-delay:.15s">
-        <h4><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Backend Engineering</h4>
-        <p>Clean Architecture, CQRS, resilience patterns — shipping production systems for 240+ Norwegian municipalities.</p>
-      </div>
-      <div class="about-card fade-up" style="transition-delay:.25s">
-        <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>International Context</h4>
-        <p>3+ years building for a Norwegian SaaS — European enterprise compliance, multi-tenant SaaS, government APIs.</p>
-      </div>
-    </div>
-  </div>
+<span class="sec-label">01 — About</span>
+<h2 class="sec-title">
+<span class="sec-title-wrap"><span class="sec-title-inner">The person behind the <span class="accent">code</span></span></span>
+</h2>
+<div class="about-grid">
+<div class="about-text">
+<p class="fade-up">
+I'm a <strong>Product Engineer</strong> based in Bengaluru, India, currently building
+AI-powered financial reporting tools for Norwegian municipalities at <strong>Framsikt AS</strong>.
+My work sits at the intersection of backend engineering, AI systems, and product thinking.
+</p>
+<p class="fade-up" style="transition-delay:.1s">
+I started as an Electronics &amp; Communication engineer and moved into software — drawn by the
+ability to build things that scale. Over 3 years, I've shipped <strong>multi-agent LLM pipelines</strong>,
+government API integrations, frontend architecture rewrites, and an 80% cloud cost reduction.
+</p>
+<p class="fade-up" style="transition-delay:.2s">
+Outside work, I co-founded <strong>Cerebral Bridge</strong> — an AI learning platform. I'm also
+working toward a <strong>Germany Masters</strong> in management, because the best engineers
+eventually become the people who decide what gets built.
+</p>
+</div>
+<div class="about-cards">
+<div class="about-card fade-up" style="transition-delay:.05s">
+<h4><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5V11h2a2 2 0 0 1 2 2v1h1a2 2 0 0 1 0 4h-1v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1H5a2 2 0 0 1 0-4h1v-1a2 2 0 0 1 2-2h2V9.5A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/><circle cx="9" cy="15" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1" fill="currentColor" stroke="none"/></svg>AI Systems</h4>
+<p>20-agent pipelines, RAG, multi-tenant AI assistants hardened against prompt injection — backed by 90+ security tests.</p>
+</div>
+<div class="about-card fade-up" style="transition-delay:.15s">
+<h4><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Backend Engineering</h4>
+<p>Clean Architecture, CQRS, resilience patterns — shipping production systems for 240+ Norwegian municipalities.</p>
+</div>
+<div class="about-card fade-up" style="transition-delay:.25s">
+<h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>International Context</h4>
+<p>3+ years building for a Norwegian SaaS — European enterprise compliance, multi-tenant SaaS, government APIs.</p>
+</div>
+</div>
+</div>
 </section>
 
 <hr/>
 
 <!-- ─── EXPERIENCE ─── -->
 <section id="experience">
-  <span class="sec-label">02 — Experience</span>
-  <h2 class="sec-title">
-    <span class="sec-title-wrap"><span class="sec-title-inner">Where I've <span class="accent">worked</span></span></span>
-  </h2>
-  <div class="timeline">
-    <div class="tl-item fade-up">
-      <div class="tl-meta">
-        <span class="tl-period">May 2026 — Present</span>
-        <span class="tl-badge">Current</span>
-      </div>
-      <div class="tl-role">Product Engineer</div>
-      <div class="tl-company">Framsikt AS, Bengaluru</div>
-      <div class="tl-stack">C# · .NET 9 · Semantic Kernel · Azure OpenAI · Angular 20 · Azure</div>
-      <ul class="tl-bullets" style="margin-top:14px">
-        <li>Built an <strong>AI reporting assistant</strong> (Azure OpenAI + Semantic Kernel) enabling non-technical users across 240+ Norwegian municipalities to query financial data in natural language — multi-tenant isolation via AsyncLocal and 90+ security tests.</li>
-        <li>Architected a <strong>17-agent story-to-PR pipeline</strong> automating brainstorming through code review and PR creation, with a runtime migration-apply gate.</li>
-        <li>Re-architected the reporting pipeline from Azure Blob + Parquet to <strong>EF Core SQL snapshots</strong>, adding HTTP resilience via Polly for government API integrations.</li>
-        <li>Integrated <strong>Brreg business registry</strong> (CEO sync, 3-year financial history) and dynamic multi-account Azure Storage following 12-Factor App patterns.</li>
-      </ul>
-    </div>
-    <div class="tl-item fade-up" style="transition-delay:.1s">
-      <div class="tl-meta">
-        <span class="tl-period">Jun 2023 — May 2026</span>
-      </div>
-      <div class="tl-role">Software Engineer</div>
-      <div class="tl-company">Framsikt AS, Bengaluru</div>
-      <div class="tl-stack">C# · .NET 8 · ASP.NET Core · Angular · Azure · Docker · SQL Server</div>
-      <ul class="tl-bullets" style="margin-top:14px">
-        <li>Reduced Azure compute costs by <strong>~80%</strong> by profiling hot paths and restructuring request handling with MediatR and Clean Architecture.</li>
-        <li>Migrated 20+ legacy AngularJS components to Angular with lazy loading — cutting median page load from <strong>13s → 2s</strong>.</li>
-        <li>Led <strong>Jest → Vitest migration</strong> (29 suites / 630 tests) and built a containerised Playwright E2E sandbox on CI.</li>
-        <li>Migrated codebase from Azure DevOps to GitHub; <strong>GitHub Actions pipelines</strong> with parallel execution cut pipeline time by 45%.</li>
-        <li>Established <strong>secretless architecture</strong> with Azure Managed Identities and Key Vault; integrated Plandisc API reducing manual processing from 6 hours to 30 minutes.</li>
-      </ul>
-    </div>
-    <div class="tl-item fade-up" style="transition-delay:.2s">
-      <div class="tl-meta">
-        <span class="tl-period">Aug 2022 — Apr 2023</span>
-      </div>
-      <div class="tl-role">Engineering Intern</div>
-      <div class="tl-company">Zoho Corporation (ManageEngine), Coimbatore</div>
-      <div class="tl-stack">Java 8 · SQL · REST · Google Admin SDK</div>
-      <ul class="tl-bullets" style="margin-top:14px">
-        <li>Developed backend services for <strong>Chrome OS Mobile Device Management</strong> using Java 8 and Google Admin SDK — pushing structured policy profiles to managed devices at scale.</li>
-        <li>Designed relational schemas and XML serialization pipelines for administrative profiles over secure REST channels.</li>
-      </ul>
-    </div>
-  </div>
+<span class="sec-label">02 — Experience</span>
+<h2 class="sec-title">
+<span class="sec-title-wrap"><span class="sec-title-inner">Where I've <span class="accent">worked</span></span></span>
+</h2>
+<div class="timeline">
+<div class="tl-item fade-up">
+<div class="tl-meta">
+<span class="tl-period">May 2026 — Present</span>
+<span class="tl-badge">Current</span>
+</div>
+<div class="tl-role">Product Engineer</div>
+<div class="tl-company">Framsikt AS, Bengaluru</div>
+<div class="tl-stack">C# · .NET 9 · Semantic Kernel · Azure OpenAI · Angular 20 · Azure</div>
+<ul class="tl-bullets" style="margin-top:14px">
+<li>Built an <strong>AI reporting assistant</strong> (Azure OpenAI + Semantic Kernel) enabling non-technical users across 240+ Norwegian municipalities to query financial data in natural language — multi-tenant isolation via AsyncLocal and 90+ security tests.</li>
+<li>Architected a <strong>20-agent story-to-PR pipeline</strong> automating brainstorming through code review and PR creation, with a runtime migration-apply gate.</li>
+<li>Re-architected the reporting pipeline from Azure Blob + Parquet to <strong>EF Core SQL snapshots</strong>, adding HTTP resilience via Polly for government API integrations.</li>
+<li>Integrated <strong>Brreg business registry</strong> (CEO sync, 3-year financial history) and dynamic multi-account Azure Storage following 12-Factor App patterns.</li>
+</ul>
+</div>
+<div class="tl-item fade-up" style="transition-delay:.1s">
+<div class="tl-meta">
+<span class="tl-period">Jun 2023 — May 2026</span>
+</div>
+<div class="tl-role">Software Engineer</div>
+<div class="tl-company">Framsikt AS, Bengaluru</div>
+<div class="tl-stack">C# · .NET 8 · ASP.NET Core · Angular · Azure · Docker · SQL Server</div>
+<ul class="tl-bullets" style="margin-top:14px">
+<li>Reduced Azure compute costs by <strong>~80%</strong> by profiling hot paths and restructuring request handling with MediatR and Clean Architecture.</li>
+<li>Migrated 20+ legacy AngularJS components to Angular with lazy loading — cutting median page load from <strong>13s → 2s</strong>.</li>
+<li>Led <strong>Jest → Vitest migration</strong> (29 suites / 630 tests) and built a containerised Playwright E2E sandbox on CI.</li>
+<li>Migrated codebase from Azure DevOps to GitHub; <strong>GitHub Actions pipelines</strong> with parallel execution cut pipeline time by 45%.</li>
+<li>Established <strong>secretless architecture</strong> with Azure Managed Identities and Key Vault; integrated Plandisc API reducing manual processing from 6 hours to 30 minutes.</li>
+</ul>
+</div>
+<div class="tl-item fade-up" style="transition-delay:.2s">
+<div class="tl-meta">
+<span class="tl-period">Aug 2022 — Apr 2023</span>
+</div>
+<div class="tl-role">Engineering Intern</div>
+<div class="tl-company">Zoho Corporation (ManageEngine), Coimbatore</div>
+<div class="tl-stack">Java 8 · SQL · REST · Google Admin SDK</div>
+<ul class="tl-bullets" style="margin-top:14px">
+<li>Developed backend services for <strong>Chrome OS Mobile Device Management</strong> using Java 8 and Google Admin SDK — pushing structured policy profiles to managed devices at scale.</li>
+<li>Designed relational schemas and XML serialization pipelines for administrative profiles over secure REST channels.</li>
+</ul>
+</div>
+</div>
 </section>
 
 <hr/>
 
 <!-- ─── PROJECTS ─── -->
 <section id="projects">
-  <span class="sec-label">03 — Projects</span>
-  <h2 class="sec-title">
-    <span class="sec-title-wrap"><span class="sec-title-inner">Things I've <span class="accent">built</span></span></span>
-  </h2>
-  <div class="projects-grid">
-    <div class="proj-card fade-up">
-      <div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div>
-      <div class="proj-name">Cerebral Bridge</div>
-      <div class="proj-role">Co-Founder &amp; Architect</div>
-      <p class="proj-desc">3-service AI learning platform — MERN onboarding portal, Python/React AI tutor engine, and .NET notification service via Azure Service Bus. Four AI capabilities: mock interview simulator, lecture summarizer, YouTube quiz generator, real-time Q&amp;A chat.</p>
-      <div class="proj-tags">
-        <span class="tag">C#</span><span class="tag">Python</span><span class="tag">React</span>
-        <span class="tag">MongoDB</span><span class="tag">Azure Service Bus</span><span class="tag">Azure OpenAI</span>
-      </div>
-      <span class="proj-soon">🔗 Live demo — coming soon</span>
-    </div>
-    <div class="proj-card fade-up" style="transition-delay:.1s">
-      <div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
-      <div class="proj-name">AI Municipal Reporting Assistant</div>
-      <div class="proj-role">Product Engineer @ Framsikt</div>
-      <p class="proj-desc">Natural language financial querying for 30+ Norwegian municipalities. Azure OpenAI + Semantic Kernel plugin architecture with strict multi-tenant isolation, prompt injection hardening, and XSS protection — backed by 90+ security tests.</p>
-      <div class="proj-tags">
-        <span class="tag">Azure OpenAI</span><span class="tag">Semantic Kernel</span>
-        <span class="tag">.NET 9</span><span class="tag">Multi-tenant</span><span class="tag">Security</span>
-      </div>
-    </div>
-    <div class="proj-card fade-up" style="transition-delay:.2s">
-      <div class="proj-icon"><svg viewBox="0 0 24 24"><rect x="4.5" y="2" width="7" height="4" rx="1"/><rect x="14.5" y="10" width="7" height="4" rx="1"/><rect x="4.5" y="18" width="7" height="4" rx="1"/><path d="M8.5 6v3.5a2 2 0 0 0 2 2h6"/><line x1="8.5" y1="14" x2="8.5" y2="18"/></svg></div>
-      <div class="proj-name">17-Agent Agentic Pipeline</div>
-      <div class="proj-role">Product Engineer @ Framsikt</div>
-      <p class="proj-desc">End-to-end automation from story brainstorming to PR creation. 17 coordinated agents handling planning, code generation, quality review (CodeRabbit + Aikido), and a runtime migration-apply gate — eliminating manual dev workflow handoffs.</p>
-      <div class="proj-tags">
-        <span class="tag">Semantic Kernel</span><span class="tag">Multi-agent</span>
-        <span class="tag">GitHub Actions</span><span class="tag">CodeRabbit</span><span class="tag">C#</span>
-      </div>
-    </div>
-  </div>
+<span class="sec-label">03 — Projects</span>
+<h2 class="sec-title">
+<span class="sec-title-wrap"><span class="sec-title-inner">Things I've <span class="accent">built</span></span></span>
+</h2>
+<div class="projects-grid">
+<div class="proj-card fade-up">
+<div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div>
+<div class="proj-name">Cerebral Bridge</div>
+<div class="proj-role">Co-Founder &amp; Architect</div>
+<p class="proj-desc">3-service AI learning platform — MERN onboarding portal, Python/React AI tutor engine, and .NET notification service via Azure Service Bus. Four AI capabilities: mock interview simulator, lecture summarizer, YouTube quiz generator, real-time Q&amp;A chat.</p>
+<div class="proj-tags">
+<span class="tag">C#</span><span class="tag">Python</span><span class="tag">React</span>
+<span class="tag">MongoDB</span><span class="tag">Azure Service Bus</span><span class="tag">Azure OpenAI</span>
+</div>
+<span class="proj-soon">🔗 Live demo — coming soon</span>
+</div>
+<div class="proj-card fade-up" style="transition-delay:.1s">
+<div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
+<div class="proj-name">AI Municipal Reporting Assistant</div>
+<div class="proj-role">Product Engineer @ Framsikt</div>
+<p class="proj-desc">Natural language financial querying for 30+ Norwegian municipalities. Azure OpenAI + Semantic Kernel plugin architecture with strict multi-tenant isolation, prompt injection hardening, and XSS protection — backed by 90+ security tests.</p>
+<div class="proj-tags">
+<span class="tag">Azure OpenAI</span><span class="tag">Semantic Kernel</span>
+<span class="tag">.NET 9</span><span class="tag">Multi-tenant</span><span class="tag">Security</span>
+</div>
+</div>
+<div class="proj-card fade-up" style="transition-delay:.2s">
+<div class="proj-icon"><svg viewBox="0 0 24 24"><rect x="4.5" y="2" width="7" height="4" rx="1"/><rect x="14.5" y="10" width="7" height="4" rx="1"/><rect x="4.5" y="18" width="7" height="4" rx="1"/><path d="M8.5 6v3.5a2 2 0 0 0 2 2h6"/><line x1="8.5" y1="14" x2="8.5" y2="18"/></svg></div>
+<div class="proj-name">20-Agent Story-to-PR Pipeline</div>
+<div class="proj-role">Product Engineer @ Framsikt</div>
+<p class="proj-desc">End-to-end automation from story brainstorming to PR creation. 20 coordinated agents handling planning, code generation, parallel quality gates (security, tests, lint, E2E), and a runtime migration-apply gate — eliminating manual dev workflow handoffs.</p>
+<div class="proj-tags">
+<span class="tag">Claude</span><span class="tag">Multi-agent</span>
+<span class="tag">GitHub Actions</span><span class="tag">CodeRabbit</span><span class="tag">C#</span>
+</div>
+<a class="proj-link" href="blog/story-to-pr-pipeline.html">Read the deep-dive →</a>
+</div>
+</div>
 </section>
 
 <hr/>
 
 <!-- ─── SKILLS ─── -->
 <section id="skills">
-  <span class="sec-label">04 — Skills</span>
-  <h2 class="sec-title">
-    <span class="sec-title-wrap"><span class="sec-title-inner">Tech I work <span class="accent">with</span></span></span>
-  </h2>
-  <div class="skills-grid">
-    <div class="skill-group fade-up">
-      <div class="skill-group-title">Languages</div>
-      <div class="skill-tags">
-        <span class="skill-tag">C#</span><span class="skill-tag">TypeScript</span>
-        <span class="skill-tag">JavaScript</span><span class="skill-tag">SQL</span>
-        <span class="skill-tag">Java</span><span class="skill-tag">Python</span>
-      </div>
-    </div>
-    <div class="skill-group fade-up" style="transition-delay:.07s">
-      <div class="skill-group-title">Backend</div>
-      <div class="skill-tags">
-        <span class="skill-tag">ASP.NET Core</span><span class="skill-tag">EF Core</span>
-        <span class="skill-tag">Semantic Kernel</span><span class="skill-tag">MediatR</span>
-        <span class="skill-tag">Polly</span><span class="skill-tag">CQRS</span>
-        <span class="skill-tag">Clean Architecture</span>
-      </div>
-    </div>
-    <div class="skill-group fade-up" style="transition-delay:.14s">
-      <div class="skill-group-title">Frontend</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Angular 20</span><span class="skill-tag">RxJS</span>
-        <span class="skill-tag">Module Federation</span><span class="skill-tag">React</span>
-        <span class="skill-tag">Kendo UI</span>
-      </div>
-    </div>
-    <div class="skill-group fade-up" style="transition-delay:.21s">
-      <div class="skill-group-title">Cloud & DevOps</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Azure OpenAI</span><span class="skill-tag">Service Bus</span>
-        <span class="skill-tag">Key Vault</span><span class="skill-tag">App Insights</span>
-        <span class="skill-tag">Managed Identities</span><span class="skill-tag">GitHub Actions</span>
-        <span class="skill-tag">Docker</span>
-      </div>
-    </div>
-    <div class="skill-group fade-up" style="transition-delay:.28s">
-      <div class="skill-group-title">Testing & Quality</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Vitest</span><span class="skill-tag">Jest</span>
-        <span class="skill-tag">Playwright</span><span class="skill-tag">SonarQube</span>
-        <span class="skill-tag">Coverity</span><span class="skill-tag">CodeRabbit</span>
-      </div>
-    </div>
-    <div class="skill-group fade-up" style="transition-delay:.35s">
-      <div class="skill-group-title">AI Tools</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Claude Code</span><span class="skill-tag">GitHub Copilot</span>
-        <span class="skill-tag">RAG</span><span class="skill-tag">Prompt Engineering</span>
-        <span class="skill-tag">Agentic Pipelines</span>
-      </div>
-    </div>
-  </div>
+<span class="sec-label">04 — Skills</span>
+<h2 class="sec-title">
+<span class="sec-title-wrap"><span class="sec-title-inner">Tech I work <span class="accent">with</span></span></span>
+</h2>
+<div class="skills-grid">
+<div class="skill-group fade-up">
+<div class="skill-group-title">Languages</div>
+<div class="skill-tags">
+<span class="skill-tag">C#</span><span class="skill-tag">TypeScript</span>
+<span class="skill-tag">JavaScript</span><span class="skill-tag">SQL</span>
+<span class="skill-tag">Java</span><span class="skill-tag">Python</span>
+</div>
+</div>
+<div class="skill-group fade-up" style="transition-delay:.07s">
+<div class="skill-group-title">Backend</div>
+<div class="skill-tags">
+<span class="skill-tag">ASP.NET Core</span><span class="skill-tag">EF Core</span>
+<span class="skill-tag">Semantic Kernel</span><span class="skill-tag">MediatR</span>
+<span class="skill-tag">Polly</span><span class="skill-tag">CQRS</span>
+<span class="skill-tag">Clean Architecture</span>
+</div>
+</div>
+<div class="skill-group fade-up" style="transition-delay:.14s">
+<div class="skill-group-title">Frontend</div>
+<div class="skill-tags">
+<span class="skill-tag">Angular 20</span><span class="skill-tag">RxJS</span>
+<span class="skill-tag">Module Federation</span><span class="skill-tag">React</span>
+<span class="skill-tag">Kendo UI</span>
+</div>
+</div>
+<div class="skill-group fade-up" style="transition-delay:.21s">
+<div class="skill-group-title">Cloud & DevOps</div>
+<div class="skill-tags">
+<span class="skill-tag">Azure OpenAI</span><span class="skill-tag">Service Bus</span>
+<span class="skill-tag">Key Vault</span><span class="skill-tag">App Insights</span>
+<span class="skill-tag">Managed Identities</span><span class="skill-tag">GitHub Actions</span>
+<span class="skill-tag">Docker</span>
+</div>
+</div>
+<div class="skill-group fade-up" style="transition-delay:.28s">
+<div class="skill-group-title">Testing & Quality</div>
+<div class="skill-tags">
+<span class="skill-tag">Vitest</span><span class="skill-tag">Jest</span>
+<span class="skill-tag">Playwright</span><span class="skill-tag">SonarQube</span>
+<span class="skill-tag">Coverity</span><span class="skill-tag">CodeRabbit</span>
+</div>
+</div>
+<div class="skill-group fade-up" style="transition-delay:.35s">
+<div class="skill-group-title">AI Tools</div>
+<div class="skill-tags">
+<span class="skill-tag">Claude Code</span><span class="skill-tag">GitHub Copilot</span>
+<span class="skill-tag">RAG</span><span class="skill-tag">Prompt Engineering</span>
+<span class="skill-tag">Agentic Pipelines</span>
+</div>
+</div>
+</div>
 </section>
 
 <hr/>
 
 <!-- ─── CONTACT ─── -->
 <section id="contact">
-  <span class="sec-label">05 — Contact</span>
-  <h2 class="sec-title" style="margin-bottom:16px">
-    <span class="sec-title-wrap"><span class="sec-title-inner">Let's <span class="accent">connect</span></span></span>
-  </h2>
-  <p class="contact-sub fade-up">Open to senior engineering roles, product roles, and interesting conversations. Based in Bengaluru — building for European companies since 2023.</p>
-  <div class="contact-links fade-up" id="contactLinks"></div>
+<span class="sec-label">05 — Contact</span>
+<h2 class="sec-title" style="margin-bottom:16px">
+<span class="sec-title-wrap"><span class="sec-title-inner">Let's <span class="accent">connect</span></span></span>
+</h2>
+<p class="contact-sub fade-up">Open to senior engineering roles, product roles, and interesting conversations. Based in Bengaluru — building for European companies since 2023.</p>
+<div class="contact-links fade-up" id="contactLinks"></div>
 </section>
 
 <!-- ─── FOOTER ─── -->
 <footer>
-  <p>© 2026 Manjit Sithuraj — <a href="https://smanjit.com">smanjit.com</a></p>
-  <p style="font-family:'JetBrains Mono',monospace;font-size:11px">Built with ♥ and too much coffee</p>
+<p>© 2026 Manjit Sithuraj — <a href="https://smanjit.com">smanjit.com</a></p>
+<p style="font-family:'JetBrains Mono',monospace;font-size:11px">Built with ♥ and too much coffee</p>
 </footer>
 
 <script>
 // ─── APPLY CONFIG ───
 document.addEventListener('DOMContentLoaded', () => {
-  // Open to work badge
-  if (CONFIG.openToWork) document.getElementById('heroTag').style.display = 'inline-flex';
+// Open to work badge
+if (CONFIG.openToWork) document.getElementById('heroTag').style.display = 'inline-flex';
 
-  // Hire Me button
-  if (CONFIG.showHireMe) {
-    const cta = document.createElement('a');
-    cta.className = 'nav-cta'; cta.href = 'mailto:' + CONFIG.email; cta.textContent = 'Hire Me';
-    document.getElementById('navRight').appendChild(cta);
-  }
+// Hire Me button
+if (CONFIG.showHireMe) {
+const cta = document.createElement('a');
+cta.className = 'nav-cta'; cta.href = 'mailto:' + CONFIG.email; cta.textContent = 'Hire Me';
+document.getElementById('navRight').appendChild(cta);
+}
 
-  // Resume button
-  document.getElementById('resumeBtn').href = CONFIG.resumeUrl;
+// Resume button
+document.getElementById('resumeBtn').href = CONFIG.resumeUrl;
 
-  // Contact links
-  const cl = document.getElementById('contactLinks');
-  [
-    { href: 'mailto:' + CONFIG.email, label: CONFIG.email,
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' },
-    { href: CONFIG.linkedin, label: 'LinkedIn', target: '_blank',
-      icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>' },
-    { href: CONFIG.github, label: 'GitHub', target: '_blank',
-      icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S9 17.44 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>' },
-  ].forEach(item => {
-    const a = document.createElement('a');
-    a.className = 'contact-link'; a.href = item.href; a.innerHTML = item.icon + item.label;
-    if (item.target) a.target = item.target, a.rel = 'noopener';
-    cl.appendChild(a);
-  });
+// Contact links
+const cl = document.getElementById('contactLinks');
+[
+{ href: 'mailto:' + CONFIG.email, label: CONFIG.email,
+icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' },
+{ href: CONFIG.linkedin, label: 'LinkedIn', target: '_blank',
+icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>' },
+{ href: CONFIG.github, label: 'GitHub', target: '_blank',
+icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S9 17.44 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>' },
+].forEach(item => {
+const a = document.createElement('a');
+a.className = 'contact-link'; a.href = item.href; a.innerHTML = item.icon + item.label;
+if (item.target) a.target = item.target, a.rel = 'noopener';
+cl.appendChild(a);
+});
 });
 
 // ─── NAV SCROLL ───
 window.addEventListener('scroll', () => {
-  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
 });
 
 // ─── HERO WORD REVEAL ───
 window.addEventListener('load', () => {
-  setTimeout(() => { document.getElementById('hw1').classList.add('in'); }, 200);
-  setTimeout(() => { document.getElementById('hw2').classList.add('in'); }, 440);
-  // Stagger fade-ups in hero
-  document.querySelectorAll('#hero .fade-up').forEach((el, i) => {
-    setTimeout(() => el.classList.add('in'), 700 + i * 140);
-  });
-  startTyping();
+setTimeout(() => { document.getElementById('hw1').classList.add('in'); }, 200);
+setTimeout(() => { document.getElementById('hw2').classList.add('in'); }, 440);
+// Stagger fade-ups in hero
+document.querySelectorAll('#hero .fade-up').forEach((el, i) => {
+setTimeout(() => el.classList.add('in'), 700 + i * 140);
+});
+startTyping();
 });
 
 // ─── TYPING ANIMATION ───
 const phrases = [
-  'AI agents','intelligent pipelines','enterprise SaaS',
-  'agentic workflows','.NET systems','Azure solutions','clean backends'
+'AI agents','intelligent pipelines','enterprise SaaS',
+'agentic workflows','.NET systems','Azure solutions','clean backends'
 ];
 let pIdx = 0, cIdx = 0, del = false;
 const typeEl = document.getElementById('heroType');
 
 function startTyping() {
-  pIdx = 0; cIdx = 0; del = false;
-  if (typeEl) typeEl.textContent = '';
-  typeLoop();
+pIdx = 0; cIdx = 0; del = false;
+if (typeEl) typeEl.textContent = '';
+typeLoop();
 }
 function typeLoop() {
-  const phrase = phrases[pIdx];
-  if (del) {
-    cIdx--;
-    if (typeEl) typeEl.textContent = phrase.slice(0, cIdx);
-    if (cIdx === 0) { del = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(typeLoop, 350); return; }
-    setTimeout(typeLoop, 45);
-  } else {
-    cIdx++;
-    if (typeEl) typeEl.textContent = phrase.slice(0, cIdx);
-    if (cIdx === phrase.length) { setTimeout(() => { del = true; typeLoop(); }, 2000); return; }
-    setTimeout(typeLoop, 85);
-  }
+const phrase = phrases[pIdx];
+if (del) {
+cIdx--;
+if (typeEl) typeEl.textContent = phrase.slice(0, cIdx);
+if (cIdx === 0) { del = false; pIdx = (pIdx + 1) % phrases.length; setTimeout(typeLoop, 350); return; }
+setTimeout(typeLoop, 45);
+} else {
+cIdx++;
+if (typeEl) typeEl.textContent = phrase.slice(0, cIdx);
+if (cIdx === phrase.length) { setTimeout(() => { del = true; typeLoop(); }, 2000); return; }
+setTimeout(typeLoop, 85);
+}
 }
 
 // ─── INTERSECTION OBSERVER — SECTION REVEALS ───
@@ -670,13 +672,13 @@ const ioOpts = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
 
 // Section titles
 const titleObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); titleObserver.unobserve(e.target); } });
+entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); titleObserver.unobserve(e.target); } });
 }, ioOpts);
 document.querySelectorAll('.sec-title-inner').forEach(el => titleObserver.observe(el));
 
 // fade-up elements (skip hero ones — handled above)
 const fuObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); fuObserver.unobserve(e.target); } });
+entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); fuObserver.unobserve(e.target); } });
 }, ioOpts);
 document.querySelectorAll('section .fade-up, footer .fade-up').forEach(el => fuObserver.observe(el));
 
