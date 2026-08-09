@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>I Type One Command. 20 AI Agents Handle the Rest. — Manjit Sithuraj</title>
+<meta name="description" content="How I built a 20-agent AI pipeline that takes a story description all the way to a merged pull request — brainstorming, coding, testing, security, E2E, and PR creation."/>
+<meta property="og:title" content="I Type One Command. 20 AI Agents Handle the Rest."/>
+<meta property="og:description" content="How I built a 20-agent AI pipeline that takes a story description all the way to a merged pull request."/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://smanjit.com/blog/story-to-pr-pipeline.html"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;--surface:#1A1A1A;--surface2:#222;
+  --accent:#DA7756;--blue:#4A7FA5;--text:#E8E0D8;--muted:#888880;--border:#2A2A2A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 56px;
+  background:rgba(13,13,13,.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:.5px}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--text)}
+.nav-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ARTICLE LAYOUT */
+.article-wrap{max-width:720px;margin:0 auto;padding:120px 24px 100px}
+
+/* HEADER */
+.article-meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.article-meta .dot{color:var(--border)}
+h1.article-title{
+  font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1.1;
+  letter-spacing:-1px;margin-bottom:20px;color:var(--text);
+}
+h1.article-title .accent{color:var(--accent)}
+.article-subtitle{font-size:17px;color:var(--muted);line-height:1.7;margin-bottom:40px;max-width:620px}
+.article-divider{border:none;border-top:1px solid var(--border);margin:40px 0}
+
+/* PROSE */
+.prose p{font-size:16px;color:rgba(232,224,216,.8);line-height:1.85;margin-bottom:22px}
+.prose p strong{color:var(--text);font-weight:600}
+.prose p em{color:var(--muted);font-style:italic}
+
+.prose h2{
+  font-size:1.5rem;font-weight:700;color:var(--text);
+  margin:48px 0 18px;letter-spacing:-.3px;
+}
+.prose h2::before{
+  content:attr(data-num) ' —';
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--accent);display:block;margin-bottom:6px;letter-spacing:1px;
+}
+.prose h3{font-size:1.1rem;font-weight:600;color:var(--text);margin:28px 0 12px}
+
+/* PULL QUOTE */
+.pull-quote{
+  border-left:3px solid var(--accent);
+  padding:16px 24px;margin:32px 0;
+  background:rgba(218,119,86,.04);border-radius:0 8px 8px 0;
+}
+.pull-quote p{font-size:15px;color:var(--muted);margin:0;font-style:italic}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;margin:28px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--surface2)}
+th{
+  text-align:left;padding:12px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:11px 16px;border-bottom:1px solid rgba(42,42,42,.6);
+  color:rgba(232,224,216,.75);vertical-align:top;line-height:1.5;
+}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.3px}
+.badge-opus{background:rgba(167,139,250,.15);color:#a78bfa}
+.badge-sonnet{background:rgba(74,127,165,.15);color:#4A7FA5}
+.badge-haiku{background:rgba(218,119,86,.12);color:var(--accent)}
+.badge-green{background:rgba(76,175,130,.12);color:#4caf82}
+
+/* CODE */
+code{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  background:var(--surface2);border:1px solid var(--border);
+  padding:2px 7px;border-radius:4px;color:var(--accent);
+}
+pre{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:20px 24px;margin:24px 0;overflow-x:auto;
+}
+pre code{background:none;border:none;padding:0;color:#4caf82;font-size:13px;line-height:1.7}
+
+/* CARD GRID */
+.card-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:28px 0}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;
+}
+.card-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.card h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.card p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+
+/* CALLOUT */
+.callout{
+  background:rgba(74,127,165,.07);border:1px solid rgba(74,127,165,.2);
+  border-radius:10px;padding:18px 22px;margin:24px 0;
+}
+.callout p{font-size:14px;color:rgba(232,224,216,.7);margin:0}
+.callout strong{color:var(--blue)}
+
+/* AUTHOR BIO */
+.author-bio{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:28px;margin-top:60px;display:flex;gap:20px;align-items:flex-start;
+}
+.author-avatar{
+  width:56px;height:56px;border-radius:50%;background:rgba(218,119,86,.12);
+  border:2px solid rgba(218,119,86,.3);display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);
+  flex-shrink:0;
+}
+.author-info h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.author-info p{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 10px}
+.author-info a{color:var(--accent);text-decoration:none;font-size:13px;font-weight:500}
+.author-info a:hover{text-decoration:underline}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:28px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1200px;margin:0 auto;
+}
+footer p{font-size:12px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:700px){
+  nav{padding:14px 20px}
+  .article-wrap{padding:90px 20px 60px}
+  .card-row{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">smanjit.com</a>
+  <a class="nav-back" href="/">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to portfolio
+  </a>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="article-meta">
+    <span>Engineering</span>
+    <span class="dot">·</span>
+    <span>AI Agents</span>
+    <span class="dot">·</span>
+    <span>August 2026</span>
+    <span class="dot">·</span>
+    <span>6 min read</span>
+  </div>
+
+  <h1 class="article-title">I Type One Command.<br><span class="accent">20 AI Agents</span> Handle the Rest.</h1>
+
+  <p class="article-subtitle">How I built a pipeline that takes a story description end-to-end — from brainstorming to a merged pull request — with 20 specialized agents, parallel execution, and a knowledge system that gets smarter with every merge.</p>
+
+  <hr class="article-divider"/>
+
+  <div class="prose">
+
+    <p>I'm a product engineer at a Norwegian SaaS company. We build cloud-based financial reporting tools for Norwegian municipalities. My stack is C#, .NET 9, Angular, Azure, and microservices.</p>
+
+    <p>A few months ago, I got tired of how slow the story-to-PR cycle was. Not the coding part. The <em>everything-around-coding</em> part.</p>
+
+    <p>Reading a ticket. Figuring out which files to change. Writing tests after implementing. Manually checking security. Creating the PR description. Reviewing CodeRabbit comments one by one. Updating Swagger. Verifying the DB migration runs on real SQL Server.</p>
+
+    <p>Each of those tasks is maybe 10–20 minutes. Together, they eat your entire day. So I built a pipeline to handle all of it.</p>
+
+    <div class="pull-quote">
+      <p>Today, I type <code>/story</code> and 20 specialized AI agents take over. They brainstorm, plan, implement, write tests, lint, security-scan, run E2E tests, and create the PR. I step in at exactly 3 points. Everything else is automatic.</p>
+    </div>
+
+    <h2 data-num="01">The Problem: Story-to-PR Is Expensive</h2>
+
+    <p><strong>Without the pipeline:</strong> Engineer reads ticket → figures out what to change → implements → writes tests → manually checks security → creates PR → reviewer finds issues → back to fix.</p>
+
+    <p><strong>With the pipeline:</strong> You paste a story → agents brainstorm, plan, implement, test, lint, security-scan, E2E verify, and create the PR — pausing only at 3 key gates for your approval.</p>
+
+    <p>The agents also share a knowledge system. They get smarter with every merged PR.</p>
+
+    <h2 data-num="02">The 20 Agents</h2>
+
+    <p>I use 20 specialized agents. Each has one job. None of them try to do everything.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Model</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>brainstorm-agent</td><td><span class="badge badge-opus">Opus</span></td><td>Scans codebase, generates clarifying questions</td></tr>
+          <tr><td>plan-agent</td><td><span class="badge badge-opus">Opus</span></td><td>File-by-file implementation plan</td></tr>
+          <tr><td>code-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Implements all backend + frontend changes</td></tr>
+          <tr><td>build-validator-agent</td><td><span class="badge badge-haiku">Haiku</span></td><td>dotnet build + npm build + unit tests — fast gate check</td></tr>
+          <tr><td>security-agent</td><td><span class="badge badge-opus">Opus</span></td><td>OWASP review, tenant isolation, auth gaps (runs twice)</td></tr>
+          <tr><td>test-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>NUnit (backend) + Vitest (Angular) — writes and runs</td></tr>
+          <tr><td>lint-agent</td><td><span class="badge badge-haiku">Haiku</span></td><td>dotnet format + TypeScript compiler</td></tr>
+          <tr><td>integration-test-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>EF Core, AutoMapper, HTTP status code tests</td></tr>
+          <tr><td>api-contract-agent</td><td><span class="badge badge-haiku">Haiku</span></td><td>Swagger ApiDefinitions.json vs actual controllers</td></tr>
+          <tr><td>db-migration-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>EF migration review — safety, nullable, reversible</td></tr>
+          <tr><td>migration-apply-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Applies idempotent EF script to ephemeral LocalDB</td></tr>
+          <tr><td>mutation-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Stryker mutation testing on changed code</td></tr>
+          <tr><td>coverage-agent</td><td><span class="badge badge-opus">Opus</span></td><td>Line coverage on diff → files Azure DevOps work item</td></tr>
+          <tr><td>playwright-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Generates .spec.ts from acceptance criteria</td></tr>
+          <tr><td>qa-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Starts Auth + Backend + Angular, runs Playwright spec</td></tr>
+          <tr><td>preflight-review-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Runs CodeRabbit CLI on the branch diff before PR</td></tr>
+          <tr><td>auto-fix-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Applies one approved fix, re-runs the failed gate</td></tr>
+          <tr><td>pr-agent</td><td><span class="badge badge-opus">Opus</span></td><td>Synthesises all reports, writes KNOWLEDGE.md, creates PR</td></tr>
+          <tr><td>review-response-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Triages + fixes + replies to CodeRabbit/human review threads</td></tr>
+          <tr><td>knowledge-agent</td><td><span class="badge badge-sonnet">Sonnet</span></td><td>Manages branch + master knowledge files</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The number isn't the impressive part. The <strong>specialization</strong> is.</p>
+
+    <h2 data-num="03">The Model Selection Strategy</h2>
+
+    <p>This is the decision I'm most proud of. Not every task needs the same model. Using Opus for everything is slow and expensive. Using Haiku for everything produces bad output. So I matched models to tasks:</p>
+
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:#a78bfa">Opus — Deep reasoning</div>
+        <p>Brainstorming, planning, security review, writing the PR description. Tasks where understanding <em>business intent</em> and <em>architectural decisions</em> matters.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Sonnet — Implementation</div>
+        <p>Writing code, tests, integration tests, Playwright specs, auto-fixes. The main workhorse. It writes and runs.</p>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:#4caf82">Haiku — Fast & cheap</div>
+        <p>Build validation, lint checks, API contract comparison. Deterministic tasks — run a command, compare files, report.</p>
+      </div>
+    </div>
+
+    <p>The result: the pipeline is faster than using one model everywhere, and output quality is better because each agent gets a model tuned to what it actually needs to do.</p>
+
+    <h2 data-num="04">Parallel Execution</h2>
+
+    <p>This is where the pipeline gets genuinely fast.</p>
+
+    <p><strong>Phase 3 — Simultaneous:</strong> The code-agent implements all changes while the security-agent reviews the <em>plan</em> for security issues. Security doesn't wait for code — it reviews what the code <em>intends to do</em> while it's being written.</p>
+
+    <p><strong>Phase 4 — 6 quality gates run simultaneously</strong> (after build passes): unit tests, lint, integration tests, API contract, DB migration static review, and DB migration applied to real LocalDB. Wall-clock time = the slowest single gate. Not the sum of all six.</p>
+
+    <p><strong>Phase 5 — Simultaneous:</strong> The playwright-agent generates and runs E2E tests while the security-agent runs a second pass on the <em>actual written code</em> — checking <code>[Authorize]</code> on new endpoints, TenantId filters in queries, <code>[innerHTML]</code> bindings in Angular.</p>
+
+    <h2 data-num="05">The Knowledge System</h2>
+
+    <p>This is what makes the pipeline get smarter over time. Four files feed every agent:</p>
+
+    <p><strong>KNOWLEDGE.md</strong> — Technical conventions discovered from previous stories. Architecture rules, pitfalls, patterns.</p>
+    <p><strong>DOMAIN.md</strong> — Business rules. What an "org" is in our system. Norwegian terminology. UI conventions. Written by engineers and SMEs.</p>
+    <p><strong>DECISIONS.md</strong> — Standing decisions. New FK columns are always nullable. Org dropdowns always use <code>getOrganisationGridData()</code>. Pre-approved — agents never ask about them again.</p>
+    <p><strong>Branch-level knowledge</strong> — Every agent logs findings during the pipeline. After merge, the knowledge-agent extracts reusable learnings and folds them into the master KNOWLEDGE.md.</p>
+
+    <p>Real examples of what gets captured:</p>
+
+    <div class="pull-quote">
+      <p><strong>Pitfall:</strong> "AutoMapper profiles must be registered in BOTH Application/Profiles/ AND Web/Mappings/ — missing one causes a silent 500 at runtime."</p>
+    </div>
+
+    <div class="pull-quote">
+      <p><strong>Decision:</strong> "New FK columns always nullable — confirmed to avoid migration failure on existing rows."</p>
+    </div>
+
+    <p>Every merged PR makes the next story faster. Brainstorm questions shrink. Plan quality improves. The pipeline genuinely learns.</p>
+
+    <h2 data-num="06">The 3 Human Gates</h2>
+
+    <p>I didn't want zero human involvement. The goal is human involvement at the <em>right</em> moments — not spread across every step.</p>
+
+    <p><strong>Gate 1 — Brainstorm:</strong> The brainstorm-agent returns 0–2 clarifying questions. Most are already answered by DOMAIN.md and DECISIONS.md. You answer the open ones, or say "use defaults."</p>
+
+    <p><strong>Gate 2 — Plan:</strong> The plan-agent shows a file-by-file list and acceptance criteria. You verify it matches your intent before a single line of code is written.</p>
+
+    <p><strong>Gate 3 — Fix approval:</strong> If a quality gate fails, the auto-fix-agent explains: what failed, the root cause, the proposed fix, and the risk level. You decide per issue.</p>
+
+    <div class="callout">
+      <p>Everything between gates is fully automatic. No manual intervention needed.</p>
+    </div>
+
+    <h2 data-num="07">The Coverage Report a PM Can Actually Read</h2>
+
+    <p>The <strong>coverage-agent</strong> doesn't just report percentages. It works with the mutation-agent (which runs Stryker on changed code) to score whether the tests have <em>teeth</em> — would they fail if the logic were wrong?</p>
+
+    <p>Then it files a single Azure DevOps work item. Not a coverage dump. A human-readable scenario catalog:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>When…</th><th>The system reacts</th><th>Guarded?</th></tr></thead>
+        <tbody>
+          <tr><td>user saves a share &gt; 100%</td><td>rejects it, shows a validation message</td><td><span class="badge badge-green">✅ Yes</span></td></tr>
+          <tr><td>the org has no parent</td><td>renders the node at the tree root</td><td><span class="badge badge-green">✅ Yes</span></td></tr>
+          <tr><td>share is exactly 100 vs 101</td><td>accepts 100, rejects 101</td><td><span class="badge" style="background:rgba(245,166,35,.12);color:#f5a623">⚠️ Partial</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Numbers and test names live in a small appendix. The body reads as product behaviour. A PM can open it and understand what's covered without knowing what NUnit is.</p>
+
+    <h2 data-num="08">How to Use It</h2>
+
+    <p>Three commands:</p>
+
+    <pre><code>/story &lt;description&gt;
+Kick off the full pipeline. Paste the Jira ticket, user story,
+or plain description. Runs until PR is created.
+
+/consolidate
+After PR merge — extracts reusable learnings, updates master
+KNOWLEDGE.md, archives the branch folder.
+
+/address-review
+After CodeRabbit comments — triages, fixes, and resolves threads.</code></pre>
+
+    <p>Real example of a <code>/story</code> input:</p>
+
+    <div class="pull-quote">
+      <p>"When creating a new Ownership strategy doc, choose which org to connect it to. The document must be connected to exactly one org. Placeholders in text nodes fetch data from that org."</p>
+    </div>
+
+    <p>That's it. The pipeline does the rest.</p>
+
+    <h2 data-num="09">What I Learned</h2>
+
+    <p><strong>Specialization beats generalization.</strong> One agent trying to do everything produces mediocre output. Twenty agents each doing one thing produces something you can actually trust.</p>
+
+    <p><strong>Parallel execution changes the game.</strong> Running 6 quality gates simultaneously instead of sequentially cut my wait time dramatically. Think about your pipeline — which steps can run at the same time?</p>
+
+    <p><strong>The knowledge system is the real moat.</strong> The agents are replaceable. The accumulated knowledge in KNOWLEDGE.md, DOMAIN.md, and DECISIONS.md is not. That's what makes this pipeline better every time.</p>
+
+    <p><strong>Human gates matter.</strong> Zero human involvement is not the goal. The goal is human involvement at the <em>right</em> points — decisions only a human should make — and automation everywhere else.</p>
+
+    <p><strong>You don't need to be an ML engineer.</strong> Every agent here uses Claude through the Anthropic API. No model training. No Python. If you understand your codebase and can describe what each step should do, you can build something like this.</p>
+
+  </div><!-- end .prose -->
+
+  <hr class="article-divider"/>
+
+  <div class="author-bio">
+    <div class="author-avatar">MS</div>
+    <div class="author-info">
+      <h4>Manjit Sithuraj</h4>
+      <p>Product Engineer at Framsikt AS (Norway). Building enterprise cloud products with .NET 9, C#, Angular, and Azure — and apparently, AI agent pipelines.</p>
+      <a href="https://linkedin.com/in/manjit-sithuraj" target="_blank" rel="noopener">LinkedIn →</a>
+      &nbsp;&nbsp;
+      <a href="/" >Portfolio →</a>
+    </div>
+  </div>
+
+</div><!-- end .article-wrap -->
+
+<footer>
+  <p>© 2026 Manjit Sithuraj — <a href="https://smanjit.com">smanjit.com</a></p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px">Built with ♥ and too much coffee</p>
+</footer>
+
+</body>
+</html>
