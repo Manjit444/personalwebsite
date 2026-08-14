@@ -431,8 +431,9 @@ eventually become the people who decide what gets built.
 <div class="tl-stack">C# · .NET 9 · Semantic Kernel · Azure OpenAI · Angular 20 · Azure</div>
 <ul class="tl-bullets" style="margin-top:14px">
 <li>Built an <strong>AI reporting assistant</strong> (Azure OpenAI + Semantic Kernel) enabling non-technical users across 240+ Norwegian municipalities to query financial data in natural language — multi-tenant isolation via AsyncLocal and 90+ security tests.</li>
-<li>Architected a <strong>20-agent story-to-PR pipeline</strong> automating brainstorming through code review and PR creation, with a runtime migration-apply gate.</li>
-<li>Re-architected the reporting pipeline from Azure Blob + Parquet to <strong>EF Core SQL snapshots</strong>, adding HTTP resilience via Polly for government API integrations.</li>
+<li>Architected a <strong>20-agent story-to-PR pipeline</strong> (Semantic Kernel + Azure OpenAI + Claude Code) automating brainstorming through PR creation with 6 parallel quality gates; embedded an <strong>AI auto-fix agent</strong> in GitHub Actions that detects, diagnoses, and patches failing builds without human intervention.</li>
+<li>Proposed and architected a centralised <strong>feature flag management system</strong> (configuration-as-code) adopted by the CTO — CI codegen generates tenant/role-targeted flag JSON with zero manual handling.</li>
+<li>Re-architected the reporting pipeline from Azure Blob + Parquet to <strong>EF Core SQL snapshots</strong>, adding Polly-based HTTP resilience (retry, circuit breaker, timeout) for government API integrations.</li>
 <li>Integrated <strong>Brreg business registry</strong> (CEO sync, 3-year financial history) and dynamic multi-account Azure Storage following 12-Factor App patterns.</li>
 </ul>
 </div>
@@ -445,10 +446,10 @@ eventually become the people who decide what gets built.
 <div class="tl-stack">C# · .NET 8 · ASP.NET Core · Angular · Azure · Docker · SQL Server</div>
 <ul class="tl-bullets" style="margin-top:14px">
 <li>Reduced Azure compute costs by <strong>~80%</strong> by profiling hot paths and restructuring request handling with MediatR and Clean Architecture.</li>
-<li>Migrated 20+ legacy AngularJS components to Angular with lazy loading — cutting median page load from <strong>13s → 2s</strong>.</li>
-<li>Led <strong>Jest → Vitest migration</strong> (29 suites / 630 tests) and built a containerised Playwright E2E sandbox on CI.</li>
-<li>Migrated codebase from Azure DevOps to GitHub; <strong>GitHub Actions pipelines</strong> with parallel execution cut pipeline time by 45%.</li>
-<li>Established <strong>secretless architecture</strong> with Azure Managed Identities and Key Vault; integrated Plandisc API reducing manual processing from 6 hours to 30 minutes.</li>
+<li>Migrated 20+ legacy AngularJS/jQuery components to Angular with lazy loading — cutting median page load from <strong>13s → 2s</strong>; built and maintained <strong>JavaScript/jQuery-driven UI interactions</strong> throughout the migration.</li>
+<li>Led <strong>Jest → Vitest migration</strong> (29 suites / 630 tests) and built a containerised Playwright E2E sandbox on CI; integrated Coverity/Polaris, Black Duck, and SonarQube into the pipeline.</li>
+<li>Migrated from Azure DevOps to GitHub Actions with parallelised pipelines cutting build time by <strong>45%</strong>; implemented <strong>blue/green deployment with auto-rollback</strong> enabling trunk-based development.</li>
+<li>Established <strong>secretless architecture</strong> with Azure Managed Identities and Key Vault; integrated Plandisc calendar API for 30+ municipalities reducing manual processing from 6 hours to 30 minutes.</li>
 </ul>
 </div>
 <div class="tl-item fade-up" style="transition-delay:.2s">
@@ -490,11 +491,12 @@ eventually become the people who decide what gets built.
 <div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
 <div class="proj-name">AI Municipal Reporting Assistant</div>
 <div class="proj-role">Product Engineer @ Framsikt</div>
-<p class="proj-desc">Natural language financial querying for 30+ Norwegian municipalities. Azure OpenAI + Semantic Kernel plugin architecture with strict multi-tenant isolation, prompt injection hardening, and XSS protection — backed by 90+ security tests.</p>
+<p class="proj-desc">Natural language financial querying for 240+ Norwegian municipalities. Azure OpenAI + Semantic Kernel plugin architecture with strict multi-tenant isolation via AsyncLocal, prompt injection hardening, and XSS protection — backed by 90+ security tests.</p>
 <div class="proj-tags">
 <span class="tag">Azure OpenAI</span><span class="tag">Semantic Kernel</span>
 <span class="tag">.NET 9</span><span class="tag">Multi-tenant</span><span class="tag">Security</span>
 </div>
+<a class="proj-link" href="blog/ai-reporting-assistant.html">Read the deep-dive →</a>
 </div>
 <div class="proj-card fade-up" style="transition-delay:.2s">
 <div class="proj-icon"><svg viewBox="0 0 24 24"><rect x="4.5" y="2" width="7" height="4" rx="1"/><rect x="14.5" y="10" width="7" height="4" rx="1"/><rect x="4.5" y="18" width="7" height="4" rx="1"/><path d="M8.5 6v3.5a2 2 0 0 0 2 2h6"/><line x1="8.5" y1="14" x2="8.5" y2="18"/></svg></div>
@@ -541,6 +543,7 @@ eventually become the people who decide what gets built.
 <div class="skill-tags">
 <span class="skill-tag">Angular 20</span><span class="skill-tag">RxJS</span>
 <span class="skill-tag">Module Federation</span><span class="skill-tag">React</span>
+<span class="skill-tag">JavaScript</span><span class="skill-tag">jQuery</span>
 <span class="skill-tag">Kendo UI</span>
 </div>
 </div>
@@ -550,7 +553,7 @@ eventually become the people who decide what gets built.
 <span class="skill-tag">Azure OpenAI</span><span class="skill-tag">Service Bus</span>
 <span class="skill-tag">Key Vault</span><span class="skill-tag">App Insights</span>
 <span class="skill-tag">Managed Identities</span><span class="skill-tag">GitHub Actions</span>
-<span class="skill-tag">Docker</span>
+<span class="skill-tag">Azure DevOps</span>
 </div>
 </div>
 <div class="skill-group fade-up" style="transition-delay:.28s">
@@ -564,9 +567,9 @@ eventually become the people who decide what gets built.
 <div class="skill-group fade-up" style="transition-delay:.35s">
 <div class="skill-group-title">AI Tools</div>
 <div class="skill-tags">
-<span class="skill-tag">Claude Code</span><span class="skill-tag">GitHub Copilot</span>
-<span class="skill-tag">RAG</span><span class="skill-tag">Prompt Engineering</span>
-<span class="skill-tag">Agentic Pipelines</span>
+<span class="skill-tag">Claude Code/CLI</span><span class="skill-tag">GitHub Copilot</span>
+<span class="skill-tag">ChatGPT</span><span class="skill-tag">Prompt Engineering</span>
+<span class="skill-tag">Agentic Pipelines</span><span class="skill-tag">Multi-Agent Systems</span>
 </div>
 </div>
 </div>
