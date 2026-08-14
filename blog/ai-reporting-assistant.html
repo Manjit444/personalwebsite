@@ -397,7 +397,7 @@ public async Task&lt;EnrollmentStatsResult&gt; GetEnrollmentStatsAsync(
 
     <p><strong>AsyncLocal is underused.</strong> Most .NET developers reach for DI scoped services or explicit parameters for cross-cutting concerns. <code>AsyncLocal</code> is a better fit when you need context to flow through async plugin chains you don't fully control.</p>
 
-    <p><strong>Plugin scope is your best friend.</strong> The narrower each plugin's capability, the smaller the blast radius of a successful injection. A plugin that only returns budget variance for the authenticated tenant — and nothing else — is very hard to weaponize.</p>
+    <p><strong>Plugin scope is your best friend.</strong> The narrower each plugin's capability, the smaller the blast radius of a successful injection. A plugin that only returns enrollment stats for the authenticated tenant — and nothing else — is very hard to weaponize.</p>
 
     <p><strong>Write the security tests before you ship.</strong> Not "we'll add tests later." The injection test suite caught three real vulnerabilities in our implementation before we went to production.</p>
 
