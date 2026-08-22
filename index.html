@@ -36,6 +36,16 @@ padding:14px 56px;
 .nav-links{display:flex;gap:36px;list-style:none}
 .nav-links a{color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;letter-spacing:.3px;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
+.nav-writing{position:relative}
+.nav-writing::after{
+  content:'';position:absolute;top:-2px;right:-8px;
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.3;transform:scale(.6)}
+}
 .nav-right{display:flex;align-items:center;gap:16px}
 .nav-cta{background:var(--accent);color:#fff;padding:8px 22px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:opacity .2s}
 .nav-cta:hover{opacity:.85}
@@ -199,7 +209,8 @@ margin-bottom:8px;padding-left:18px;position:relative;
 .tl-bullets li strong{color:var(--text);font-weight:600}
 
 /* ── PROJECTS ── */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:700px){.projects-grid{grid-template-columns:1fr}}
 .proj-card{
 background:var(--surface);border:1px solid var(--border);
 border-radius:14px;padding:28px;position:relative;overflow:hidden;
@@ -314,7 +325,7 @@ resumeUrl: 'Manjit_Sithuraj_Resume_Print.pdf',
 <li><a href="#projects">Projects</a></li>
 <li><a href="#skills">Skills</a></li>
 <li><a href="#contact">Contact</a></li>
-<li><a href="blog/" style="color:var(--accent)">Writing</a></li>
+<li><a href="blog/" class="nav-writing">Writing</a></li>
 </ul>
 <div class="nav-right" id="navRight"></div>
 </nav>
@@ -509,6 +520,17 @@ eventually become the people who decide what gets built.
 <span class="tag">GitHub Actions</span><span class="tag">CodeRabbit</span><span class="tag">C#</span>
 </div>
 <a class="proj-link" href="blog/story-to-pr-pipeline.html">Read the deep-dive →</a>
+</div>
+<div class="proj-card fade-up" style="transition-delay:.3s">
+<div class="proj-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+<div class="proj-name">Code-First Feature Flag Platform</div>
+<div class="proj-role">Product Engineer @ Framsikt</div>
+<p class="proj-desc">Built a code-first feature flag system enabling trunk-based development — daily production deployments with zero risk. Attribute-driven catalog, per-environment state via Azure App Configuration, client-safe filtering, and an expiry bot to prevent zombie flags.</p>
+<div class="proj-tags">
+<span class="tag">Azure App Config</span><span class="tag">.NET</span>
+<span class="tag">Trunk-Based Dev</span><span class="tag">DevOps</span>
+</div>
+<a class="proj-link" href="blog/feature-flags-trunk-based.html">Read the deep-dive →</a>
 </div>
 </div>
 </section>
