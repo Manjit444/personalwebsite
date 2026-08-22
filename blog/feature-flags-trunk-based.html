@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>I Ship to Production Every Day. Feature Flags Are Why That's Safe. — Manjit Sithuraj</title>
+<meta name="description" content="How I built a code-first feature flag system for trunk-based development — with per-environment state, client-safe filtering, zombie flag prevention, and live toggling without redeployment."/>
+<meta property="og:title" content="I Ship to Production Every Day. Feature Flags Are Why That's Safe."/>
+<meta property="og:description" content="A code-first feature flag system for trunk-based development — per-env state, client-safe filtering, expiry enforcement, and zero-redeploy toggling."/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://smanjit.com/blog/feature-flags-trunk-based.html"/>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;--surface:#1A1A1A;--surface2:#222;
+  --accent:#DA7756;--blue:#4A7FA5;--text:#E8E0D8;--muted:#888880;--border:#2A2A2A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 56px;
+  background:rgba(13,13,13,.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:.5px}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--text)}
+.nav-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.article-wrap{max-width:720px;margin:0 auto;padding:120px 24px 100px}
+
+.article-meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.article-meta .dot{color:var(--border)}
+h1.article-title{
+  font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1.1;
+  letter-spacing:-1px;margin-bottom:20px;color:var(--text);
+}
+h1.article-title .accent{color:var(--accent)}
+.article-subtitle{font-size:17px;color:var(--muted);line-height:1.7;margin-bottom:40px;max-width:620px}
+.article-divider{border:none;border-top:1px solid var(--border);margin:40px 0}
+
+.prose p{font-size:16px;color:rgba(232,224,216,.8);line-height:1.85;margin-bottom:22px}
+.prose p strong{color:var(--text);font-weight:600}
+.prose p em{color:var(--muted);font-style:italic}
+
+.prose h2{
+  font-size:1.5rem;font-weight:700;color:var(--text);
+  margin:48px 0 18px;letter-spacing:-.3px;
+}
+.prose h2::before{
+  content:attr(data-num) ' —';
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--accent);display:block;margin-bottom:6px;letter-spacing:1px;
+}
+.prose h3{font-size:1.1rem;font-weight:600;color:var(--text);margin:28px 0 12px}
+
+.pull-quote{
+  border-left:3px solid var(--accent);
+  padding:16px 24px;margin:32px 0;
+  background:rgba(218,119,86,.04);border-radius:0 8px 8px 0;
+}
+.pull-quote p{font-size:15px;color:var(--muted);margin:0;font-style:italic}
+
+.code-block{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:24px;margin:28px 0;overflow-x:auto;
+}
+.code-block pre{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:#cdd9e5;line-height:1.7;white-space:pre;
+}
+.code-block .comment{color:#636e7b}
+.code-block .kw{color:#f47067}
+.code-block .type{color:#dcbdfb}
+.code-block .str{color:#96d0ff}
+.code-block .attr{color:#6cb6ff}
+.code-block .num{color:#6cb6ff}
+.code-block .fn{color:#dcbdfb}
+.code-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;
+}
+
+.callout{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin:28px 0;
+}
+.callout-title{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;
+}
+.callout p{font-size:14px;color:var(--muted);margin:0;line-height:1.7}
+
+.diagram-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:32px;margin:36px 0;
+}
+
+.flow{display:flex;flex-direction:column;gap:0;align-items:flex-start}
+.flow-step{
+  display:flex;align-items:flex-start;gap:16px;padding:16px 0;
+  border-left:2px solid var(--border);margin-left:12px;
+  padding-left:24px;position:relative;
+}
+.flow-step::before{
+  content:'';width:10px;height:10px;border-radius:50%;
+  background:var(--accent);position:absolute;left:-6px;top:22px;
+}
+.flow-step:last-child{border-left-color:transparent}
+.flow-label{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--accent);letter-spacing:1px;text-transform:uppercase;
+  white-space:nowrap;margin-top:2px;min-width:100px;
+}
+.flow-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+.tag{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(218,119,86,.08);border:1px solid rgba(218,119,86,.15);color:var(--accent);
+}
+.tag.blue{background:rgba(74,127,165,.08);border-color:rgba(74,127,165,.15);color:var(--blue)}
+
+.toc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:24px;margin:40px 0;
+}
+.toc-title{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;
+}
+.toc a{
+  display:block;font-size:14px;color:var(--muted);text-decoration:none;
+  padding:4px 0;transition:color .2s;
+}
+.toc a:hover{color:var(--accent)}
+.toc a span{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--border);margin-right:10px;
+}
+
+.table-wrap{overflow-x:auto;margin:28px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--surface2)}
+th{
+  text-align:left;padding:12px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:rgba(232,224,216,.8);font-size:14px;line-height:1.6}
+tr:last-child td{border-bottom:none}
+td code,th code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent)}
+
+.article-footer{margin-top:80px;padding-top:40px;border-top:1px solid var(--border)}
+.author-row{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.author-avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--surface2);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);
+}
+.author-name{font-weight:600;font-size:15px;color:var(--text)}
+.author-role{font-size:13px;color:var(--muted)}
+.article-links{display:flex;gap:16px;flex-wrap:wrap}
+.article-links a{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+  color:var(--accent);text-decoration:none;letter-spacing:.5px;
+  padding:8px 18px;border:1px solid rgba(218,119,86,.3);border-radius:20px;transition:all .2s;
+}
+.article-links a:hover{background:rgba(218,119,86,.1)}
+
+footer{
+  border-top:1px solid var(--border);padding:28px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+footer p{font-size:12px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:700px){
+  nav{padding:14px 20px}
+  .article-wrap{padding:90px 20px 60px}
+  .flow-step{flex-direction:column;gap:4px}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">smanjit.com</a>
+  <a class="nav-back" href="/blog/">
+    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Writing
+  </a>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="article-meta">
+    <span>August 2026</span>
+    <span class="dot">·</span>
+    <span>14 min read</span>
+    <span class="dot">·</span>
+    <span>.NET · Azure · DevOps</span>
+  </div>
+
+  <h1 class="article-title">I Ship to Production <span class="accent">Every Day.</span><br/>Feature Flags Are Why That's Safe.</h1>
+
+  <p class="article-subtitle">How I built a code-first feature flag system for trunk-based development — with per-environment state, client-safe filtering, expiry enforcement, and live toggling without a single redeployment.</p>
+
+  <div class="tag-row">
+    <span class="tag">DevOps</span>
+    <span class="tag">.NET</span>
+    <span class="tag blue">Azure App Config</span>
+    <span class="tag blue">Trunk-Based Dev</span>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">In this article</div>
+    <a href="#why"><span>01</span>Why trunk-based development breaks without flags</a>
+    <a href="#catalog"><span>02</span>The code-first catalog — one source of truth</a>
+    <a href="#environments"><span>03</span>Per-environment state without JSON hell</a>
+    <a href="#client-safe"><span>04</span>Client-safe filtering — don't leak server flags to the browser</a>
+    <a href="#live"><span>05</span>Live toggling — 30 seconds, no redeploy</a>
+    <a href="#zombies"><span>06</span>Zombie flags: the silent killer</a>
+    <a href="#learned"><span>07</span>What I learned</a>
+  </div>
+
+  <hr class="article-divider"/>
+
+  <div class="prose">
+
+    <p>My team ships to production every weekday. Not every sprint — every day. We merge to main, CI runs, and if it's green, it goes out.</p>
+
+    <p>This sounds risky. It isn't — because every in-progress feature sits behind a flag. You can merge half-built work, merge it early, merge it often. As long as the flag is off, users never see it. When it's ready, flip the flag. No big-bang release. No long-lived branches that rot.</p>
+
+    <p>But here's what nobody tells you: <strong>feature flags only work if the system managing them is solid.</strong> A poorly designed flag system creates more problems than it solves — scattered JSON files, flags nobody can find, dev flags leaking to production, flags that live forever because nobody dares touch them.</p>
+
+    <p>This is what I built to solve all of that.</p>
+
+    <h2 id="why" data-num="01">Why trunk-based development breaks without flags</h2>
+
+    <p>Trunk-based development (TBD) means everyone works on one branch — <code>main</code>. No long-lived feature branches. You commit small, you commit often, and you merge before the day is out.</p>
+
+    <p>The problem is obvious: what do you do when a feature takes two weeks to build? You can't merge broken half-built code to main.</p>
+
+    <p>The answer is feature flags. Wrap the unfinished feature in a flag check. Merge freely. The flag keeps it hidden until it's ready. Simple in theory — chaotic in practice without a proper system.</p>
+
+    <div class="callout">
+      <div class="callout-title">The core problem</div>
+      <p>Without a structured system, flags scatter across config files, environment variables, and hardcoded values. Nobody knows what's on, what's off, what's safe to delete, or what breaks if you touch it.</p>
+    </div>
+
+    <h2 id="catalog" data-num="02">The code-first catalog — one source of truth</h2>
+
+    <p>The first thing I built was a flag catalog. Every flag in the system must be declared in code — not in a config file, not in a portal, not in an environment variable. In code, with an attribute.</p>
+
+    <div class="code-block">
+      <div class="code-label">C# — Flag declaration</div>
+      <pre><span class="kw">public static class</span> <span class="type">TaskFlags</span>
+{
+    <span class="comment">// A release flag — ships a finished feature</span>
+    [<span class="type">FlagMeta</span>(
+        team: <span class="str">"backend"</span>,
+        type: <span class="type">FlagType</span>.Release,
+        environments: <span class="type">AppEnv</span>.Dev | <span class="type">AppEnv</span>.Staging,
+        exposedToClient: <span class="kw">false</span>,
+        expiresOn: <span class="str">"2026-09-01"</span>
+    )]
+    <span class="kw">public const string</span> <span class="attr">BulkTaskImport</span> = <span class="str">"task.bulk-import"</span>;
+
+    <span class="comment">// An experiment flag — A/B test</span>
+    [<span class="type">FlagMeta</span>(
+        team: <span class="str">"product"</span>,
+        type: <span class="type">FlagType</span>.Experiment,
+        environments: <span class="type">AppEnv</span>.Staging | <span class="type">AppEnv</span>.Production,
+        exposedToClient: <span class="kw">true</span>,
+        expiresOn: <span class="str">"2026-10-15"</span>
+    )]
+    <span class="kw">public const string</span> <span class="attr">NewDashboardLayout</span> = <span class="str">"task.new-dashboard"</span>;</pre>
+    </div>
+
+    <p>Every flag has an owning team, a type, which environments it's active in by default, whether the browser is allowed to know about it, and an expiry date. That's it. Declaring the flag IS the source of truth.</p>
+
+    <p>A CLI tool scans these declarations at build time and generates the configuration JSON for each environment. Nobody hand-edits JSON. Nobody forgets a property. The code is always right because the code drives everything else.</p>
+
+    <div class="pull-quote">
+      <p>A feature team never touches a platform file to ship a flag. They declare it, gate their code, and the system does the rest.</p>
+    </div>
+
+    <h3>Using a flag in server code</h3>
+
+    <div class="code-block">
+      <div class="code-label">C# — Gating server-side logic</div>
+      <pre><span class="kw">public class</span> <span class="type">TaskService</span>(<span class="type">IFeatureFlagGate</span> flags)
+{
+    <span class="kw">public async</span> <span class="type">Task</span>&lt;<span class="type">ImportResult</span>&gt; <span class="fn">ImportBulkAsync</span>(<span class="type">ImportRequest</span> req)
+    {
+        <span class="kw">if</span> (!<span class="kw">await</span> flags.<span class="fn">IsEnabledAsync</span>(<span class="type">TaskFlags</span>.<span class="attr">BulkTaskImport</span>))
+            <span class="kw">throw new</span> <span class="type">FeatureNotAvailableException</span>();
+
+        <span class="comment">// actual import logic</span>
+        <span class="kw">return await</span> _importer.<span class="fn">RunAsync</span>(req);
+    }
+}</pre>
+    </div>
+
+    <h2 id="environments" data-num="03">Per-environment state without JSON hell</h2>
+
+    <p>The classic mess: <code>appsettings.Development.json</code>, <code>appsettings.Staging.json</code>, <code>appsettings.Production.json</code> — each one a slightly different copy, all drifting out of sync over time. Someone enables a flag in dev, forgets to update staging, it ships to production in the wrong state.</p>
+
+    <p>My solution: the flag declaration itself carries its default state per environment via the <code>environments</code> field. The CLI emitter reads the catalog and generates correct JSON for each environment. The only way a flag is enabled in production by default is if the developer explicitly says <code>Env.Production</code> in the attribute.</p>
+
+    <div class="code-block">
+      <div class="code-label">Shell — Generate per-env config</div>
+      <pre>dotnet run --project TaskManager.Flags.Cli -- emit --target production
+<span class="comment"># Outputs: feature_management JSON for Azure App Configuration</span>
+<span class="comment"># No manual editing. Catalog is always right.</span></pre>
+    </div>
+
+    <p>This JSON is then imported to Azure App Configuration in the CD pipeline. Live state lives there — not in the repo. The repo just defines the defaults. Operations can flip a flag in the portal without redeploying. The repo catches up on the next deploy.</p>
+
+    <div class="diagram-wrap">
+      <div class="code-label" style="margin-bottom:20px">How a flag travels from code to production</div>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-label">Declare</div>
+          <div class="flow-desc">Developer adds <code>[FeatureFlag]</code> attribute in code. Owner, env defaults, expiry all set here.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-label">Generate</div>
+          <div class="flow-desc">CLI tool scans catalog, emits per-env JSON. Runs in CI on every merge to main.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-label">Upload</div>
+          <div class="flow-desc">CD pipeline imports JSON to Azure App Configuration with <code>label=app</code>. Overwrites previous state.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-label">Toggle</div>
+          <div class="flow-desc">Operations flips a flag in the App Config portal — no redeploy needed. App picks it up within 30 seconds.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="client-safe" data-num="04">Client-safe filtering — don't leak server flags to the browser</h2>
+
+    <p>This one catches people off guard. If you expose your full flag list to the frontend via an API, you're leaking your entire feature roadmap to anyone who opens DevTools. Upcoming features, experiments, kill switches — all visible.</p>
+
+    <p>The fix is <code>exposedToClient: true/false</code> on each flag. A flag marked <code>exposedToClient: false</code> never appears in the API response the browser polls. It simply doesn't exist as far as the client is concerned.</p>
+
+    <div class="code-block">
+      <div class="code-label">C# — API endpoint (server-side)</div>
+      <pre>[<span class="type">HttpGet</span>(<span class="str">"/api/flags/browser"</span>)]
+<span class="kw">public async</span> <span class="type">Task</span>&lt;<span class="type">IActionResult</span>&gt; <span class="fn">GetBrowserFlags</span>()
+{
+    <span class="comment">// Only client-safe flags evaluated and returned</span>
+    <span class="kw">var</span> browserFlags = _catalog.<span class="fn">GetBrowserVisibleIds</span>();
+    <span class="kw">var</span> result = <span class="kw">new</span> <span class="type">Dictionary</span>&lt;<span class="kw">string</span>, <span class="kw">bool</span>&gt;();
+
+    <span class="kw">foreach</span> (<span class="kw">var</span> id <span class="kw">in</span> browserFlags)
+        result[id] = <span class="kw">await</span> _flags.<span class="fn">CheckAsync</span>(id);
+
+    <span class="kw">return</span> <span class="fn">Ok</span>(result);
+}
+<span class="comment">// Non-browser flags never evaluated here — invisible to the client</span></pre>
+    </div>
+
+    <p>The Angular frontend polls this endpoint every 30 seconds. It only ever knows about flags that were explicitly marked safe. Route guards and UI elements check against this list. Everything else is invisible by design.</p>
+
+    <div class="callout">
+      <div class="callout-title">CWE-200 — Information Exposure</div>
+      <p>Leaking internal flag names to the browser is a real information disclosure risk. Flag names often reveal feature names, codenames, or architecture details. Client-safe filtering is not optional.</p>
+    </div>
+
+    <h2 id="live" data-num="05">Live toggling — 30 seconds, no redeploy</h2>
+
+    <p>The whole point of feature flags is the ability to turn things on and off fast. If toggling a flag requires a deployment, you've added risk — the thing you were trying to avoid in the first place.</p>
+
+    <p>Azure App Configuration supports refresh intervals. The backend polls for changes every 30 seconds. The frontend polls the API every 30 seconds. End-to-end, a flag flip propagates in under 60 seconds with zero downtime.</p>
+
+    <div class="code-block">
+      <div class="code-label">C# — App Configuration setup</div>
+      <pre>builder.Configuration
+    .<span class="fn">AddAzureAppConfiguration</span>(opts =>
+    {
+        opts.<span class="fn">Connect</span>(endpoint, credential)
+            .<span class="fn">UseFeatureFlags</span>(ff =>
+            {
+                ff.<span class="fn">SetRefreshInterval</span>(<span class="type">TimeSpan</span>.<span class="fn">FromSeconds</span>(<span class="num">30</span>));
+                ff.Label = <span class="str">"app"</span>;
+            });
+    });</pre>
+    </div>
+
+    <p>There's also an in-memory fallback for local development. If no App Configuration endpoint is configured, the app regenerates flag state directly from the catalog — dev environment flags on, everything else off. Developers get a working setup without any cloud dependency.</p>
+
+    <h2 id="zombies" data-num="06">Zombie flags: the silent killer</h2>
+
+    <p>This is the problem nobody talks about until it bites them. A flag ships a feature. The feature is stable. The flag should be deleted — but nobody does it because "it's working, don't touch it." Six months later you have 80 flags, nobody knows which ones are safe to remove, and the codebase is littered with dead branches.</p>
+
+    <p>Every flag in my system has a mandatory <code>expiry</code> date. Before that date, an automated bot files a work item: "This flag is expiring — remove it or extend the date." Nobody forgets. Ignoring it means your sprint board is noisy until you deal with it.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Flag kind</th>
+            <th>Typical lifetime</th>
+            <th>What happens at expiry</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Release</code></td>
+            <td>Until feature is stable (weeks)</td>
+            <td>Remove flag, make behaviour permanent</td>
+          </tr>
+          <tr>
+            <td><code>Experiment</code></td>
+            <td>Until A/B test concludes</td>
+            <td>Keep winner, delete loser and flag</td>
+          </tr>
+          <tr>
+            <td><code>KillSwitch</code></td>
+            <td>Indefinite</td>
+            <td>Review annually, extend or remove</td>
+          </tr>
+          <tr>
+            <td><code>Permission</code></td>
+            <td>Indefinite</td>
+            <td>Migrate to a proper permissions system</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The expiry date isn't enforced at runtime — the flag doesn't auto-disable. It's a governance mechanism. The bot creates noise until you deal with it. That friction is intentional.</p>
+
+    <h2 id="learned" data-num="07">What I learned</h2>
+
+    <p><strong>The flag system is infrastructure.</strong> Treat it that way from the start. A couple of booleans in <code>appsettings.json</code> works for one flag. It collapses under ten.</p>
+
+    <p><strong>Code is the source of truth — not the portal.</strong> Portals are for emergency toggles. If the portal is how flags normally get configured, you'll have drift, undocumented state, and flags nobody owns.</p>
+
+    <p><strong>Client-safe filtering is not optional.</strong> Your feature roadmap is not public information. A 30-line API filter keeps it that way.</p>
+
+    <p><strong>Expiry dates feel bureaucratic until month six.</strong> Then they feel like the most important thing you shipped.</p>
+
+    <p><strong>Trunk-based development without flags is chaos. With flags, it's calm.</strong> The system isn't about moving fast — it's about moving safely. Every daily deploy is boring. That's the goal.</p>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="author-row">
+      <div class="author-avatar">M</div>
+      <div>
+        <div class="author-name">Manjit Sithuraj</div>
+        <div class="author-role">Software Engineer · .NET · AI Systems</div>
+      </div>
+    </div>
+    <div class="article-links">
+      <a href="https://medium.com/@manjit444manjit" target="_blank">Read on Medium</a>
+      <a href="https://linkedin.com/in/manjit-sithuraj" target="_blank">LinkedIn</a>
+      <a href="/blog/">← More articles</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Manjit Sithuraj · <a href="/">smanjit.com</a></p>
+  <p><a href="/blog/">← Writing</a></p>
+</footer>
+
+</body>
+</html>
