@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Context Is the Bottleneck, Not the Model — Manjit Sithuraj</title>
+<meta name="description" content="Everyone asks which AI model to use. Nobody asks what context they're feeding it. Here's how I fixed inconsistent agent output by engineering context, not chasing models."/>
+<meta property="og:title" content="Context Is the Bottleneck, Not the Model"/>
+<meta property="og:description" content="The real reason your AI agents produce inconsistent output — and how a living context foundation changed everything in my agentic pipeline."/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://smanjit.com/blog/context-engineering-agents.html"/>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;--surface:#1A1A1A;--surface2:#222;
+  --accent:#DA7756;--blue:#4A7FA5;--text:#E8E0D8;--muted:#888880;--border:#2A2A2A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 56px;
+  background:rgba(13,13,13,.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:.5px}
+.nav-back{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--text)}
+.nav-back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.article-wrap{max-width:720px;margin:0 auto;padding:120px 24px 100px}
+
+.article-meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+}
+.article-meta .dot{color:var(--border)}
+h1.article-title{
+  font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1.1;
+  letter-spacing:-1px;margin-bottom:20px;color:var(--text);
+}
+h1.article-title .accent{color:var(--accent)}
+.article-subtitle{font-size:17px;color:var(--muted);line-height:1.7;margin-bottom:40px;max-width:620px}
+.article-divider{border:none;border-top:1px solid var(--border);margin:40px 0}
+
+.prose p{font-size:16px;color:rgba(232,224,216,.8);line-height:1.85;margin-bottom:22px}
+.prose p strong{color:var(--text);font-weight:600}
+.prose p em{color:var(--muted);font-style:italic}
+
+.prose h2{
+  font-size:1.5rem;font-weight:700;color:var(--text);
+  margin:48px 0 18px;letter-spacing:-.3px;
+}
+.prose h2::before{
+  content:attr(data-num) ' —';
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--accent);display:block;margin-bottom:6px;letter-spacing:1px;
+}
+.prose h3{font-size:1.1rem;font-weight:600;color:var(--text);margin:28px 0 12px}
+
+.pull-quote{
+  border-left:3px solid var(--accent);
+  padding:16px 24px;margin:32px 0;
+  background:rgba(218,119,86,.04);border-radius:0 8px 8px 0;
+}
+.pull-quote p{font-size:15px;color:var(--muted);margin:0;font-style:italic}
+
+.code-block{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:24px;margin:28px 0;overflow-x:auto;
+}
+.code-block pre{
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:#cdd9e5;line-height:1.7;white-space:pre;
+}
+.code-block .comment{color:#636e7b}
+.code-block .kw{color:#f47067}
+.code-block .str{color:#96d0ff}
+.code-block .attr{color:#6cb6ff}
+.code-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;
+}
+
+.callout{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:20px 24px;margin:28px 0;
+}
+.callout-title{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;
+}
+.callout p{font-size:14px;color:var(--muted);margin:0;line-height:1.7}
+
+.diagram-wrap{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:32px;margin:36px 0;
+}
+
+.context-layers{display:flex;flex-direction:column;gap:12px}
+.context-layer{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+}
+.layer-num{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--accent);letter-spacing:1px;min-width:28px;
+}
+.layer-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.layer-desc{font-size:12px;color:var(--muted)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+.col-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.col-card h4{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.col-card.bad h4{color:#e05c5c}
+.col-card.good h4{color:#5cb85c}
+.col-card ul{list-style:none;padding:0}
+.col-card ul li{font-size:13px;color:var(--muted);padding:4px 0;display:flex;gap:8px}
+.col-card ul li::before{content:'→';color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px}
+
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0}
+.result-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:20px;text-align:center;
+}
+.result-num{font-size:2rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;line-height:1}
+.result-label{font-size:12px;color:var(--muted);margin-top:6px}
+
+.hero-img{width:100%;border-radius:12px;margin-bottom:40px;display:block}
+
+footer{
+  border-top:1px solid var(--border);padding:28px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+footer p{font-size:12px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:700px){
+  nav{padding:14px 20px}
+  .article-wrap{padding:90px 20px 60px}
+  .two-col,.result-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">smanjit.com</a>
+  <a class="nav-back" href="/blog/">
+    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    All articles
+  </a>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="article-meta">
+    <span>Engineering</span>
+    <span class="dot">·</span>
+    <span>AI Agents</span>
+    <span class="dot">·</span>
+    <span>September 2026</span>
+    <span class="dot">·</span>
+    <span>8 min read</span>
+  </div>
+
+  <h1 class="article-title">Context Is the Bottleneck,<br/><span class="accent">Not the Model.</span></h1>
+  <p class="article-subtitle">Everyone's asking which model to use. Nobody's asking what they're feeding it. Here's what I learned after building a 17-agent pipeline that ships to production.</p>
+
+  <img src="images/context-engineering-cover.png" alt="Context Engineering — AI Agents" class="hero-img"/>
+
+  <hr class="article-divider"/>
+
+  <div class="prose">
+
+    <p>When I started building agentic workflows, I made the same mistake everyone does. Something wasn't working, so I switched models. GPT-4o instead of GPT-4-turbo. Claude Sonnet instead of Claude Haiku. Tweaked the temperature. Tried a different system prompt.</p>
+
+    <p>The output was still inconsistent. Sometimes brilliant. Sometimes completely wrong about how our codebase was structured. The model would generate code that ignored our architecture patterns, used conventions we'd explicitly moved away from, or missed context that any engineer on the team would have known.</p>
+
+    <p><strong>The model wasn't the problem.</strong> The context was.</p>
+
+    <div class="pull-quote">
+      <p>"Give an agent a great model with no context, and you get fast, confident, wrong answers. Give it average context, and you get mediocre answers. Give it great context, and the model almost doesn't matter."</p>
+    </div>
+
+    <h2 data-num="01">What "context" actually means</h2>
+
+    <p>When most developers say "context," they mean the messages in the conversation window. That's only part of it. Context for an agent is everything the agent knows about the world it's operating in before it starts generating.</p>
+
+    <p>In a codebase, that means:</p>
+
+    <div class="diagram-wrap">
+      <div class="context-layers">
+        <div class="context-layer">
+          <div class="layer-num">01</div>
+          <div>
+            <div class="layer-title">Architecture decisions</div>
+            <div class="layer-desc">Which patterns we use, which we've deliberately avoided, and why. Clean Architecture, not MVC spaghetti. CQRS for write paths, not for simple reads.</div>
+          </div>
+        </div>
+        <div class="context-layer">
+          <div class="layer-num">02</div>
+          <div>
+            <div class="layer-title">Coding standards</div>
+            <div class="layer-desc">Naming conventions, file structure, how services are registered, how errors surface. The things that make a PR feel "off" when violated.</div>
+          </div>
+        </div>
+        <div class="context-layer">
+          <div class="layer-num">03</div>
+          <div>
+            <div class="layer-title">Component library</div>
+            <div class="layer-desc">What already exists. Which utilities, base classes, and shared services are available so the agent doesn't reinvent them.</div>
+          </div>
+        </div>
+        <div class="context-layer">
+          <div class="layer-num">04</div>
+          <div>
+            <div class="layer-title">Constraint definitions</div>
+            <div class="layer-desc">What the agent must not do. Don't mutate shared state. Don't introduce new dependencies without justification. Always handle tenant context.</div>
+          </div>
+        </div>
+        <div class="context-layer">
+          <div class="layer-num">05</div>
+          <div>
+            <div class="layer-title">Validation expectations</div>
+            <div class="layer-desc">How the agent knows when it's done. What "passing" looks like. Which quality gates must be green before the work is considered complete.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>Without these, every agent session starts cold. The agent has no idea whether you prefer repository pattern or direct DbContext access. It doesn't know that you migrated away from AngularJS last year and old patterns shouldn't be reintroduced. It doesn't know that certain API responses require tenant isolation before they're returned.</p>
+
+    <p>It guesses. Sometimes it guesses right. Often it doesn't.</p>
+
+    <h2 data-num="02">The cost of cold starts</h2>
+
+    <p>I built a task management app to prototype agentic workflows. The spec was simple: a feature to bulk-assign tasks to a team member. I gave the agent the feature description and asked it to implement it.</p>
+
+    <p>The output was technically correct code. It worked. But it used a pattern we'd moved away from six months ago — direct SQL queries instead of the repository layer we'd standardised on. It also added a new endpoint instead of extending an existing one, duplicating validation logic we'd already centralised.</p>
+
+    <p>The code passed tests. It would have failed code review. A human engineer would have caught it in 30 seconds. The agent had no way to know.</p>
+
+    <div class="two-col">
+      <div class="col-card bad">
+        <h4>Without context</h4>
+        <ul>
+          <li>Guesses your architecture patterns</li>
+          <li>Reinvents utilities that already exist</li>
+          <li>Violates conventions it doesn't know about</li>
+          <li>Inconsistent output across sessions</li>
+          <li>Code review catches what tests don't</li>
+        </ul>
+      </div>
+      <div class="col-card good">
+        <h4>With context</h4>
+        <ul>
+          <li>Follows your actual patterns</li>
+          <li>Reuses existing components correctly</li>
+          <li>Respects constraints without being reminded</li>
+          <li>Consistent output across sessions and agents</li>
+          <li>Code review confirms, doesn't correct</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 data-num="03">Building a living context foundation</h2>
+
+    <p>The solution was a file I called <strong>CLAUDE.md</strong> — a structured document that every agent reads before starting work. Think of it as onboarding documentation written specifically for AI consumption, not for humans.</p>
+
+    <p>Human documentation is optimised for readability. Agent context is optimised for precision. The difference matters.</p>
+
+    <div class="code-block">
+      <div class="code-label">CLAUDE.md — architecture section</div>
+      <pre><span class="comment"># Architecture Decisions</span>
+
+<span class="comment">## Pattern: CQRS with MediatR</span>
+All write operations go through MediatR commands.
+All read operations go through MediatR queries.
+Do NOT use DbContext directly in controllers or services.
+Do NOT bypass the mediator pipeline.
+
+<span class="comment">## Pattern: Repository layer</span>
+Data access only through repository interfaces.
+Repositories live in Infrastructure/Repositories/.
+Never inject IAppDbContext directly into application services.
+
+<span class="comment">## Tenant isolation</span>
+Every data access MUST filter by TenantId from ITenantContext.
+This is not optional. Missing tenant filter = security bug.
+ITenantContext is always registered via AsyncLocal — do not pass it manually.
+
+<span class="comment">## What we DO NOT do</span>
+- No static helper classes
+- No direct HttpClient instantiation (use IHttpClientFactory)
+- No catching Exception base class without rethrowing
+- No Console.WriteLine in production code</pre>
+    </div>
+
+    <p>The key insight: <strong>constraints are more important than examples.</strong> Agents are good at generating code that works. They need explicit instruction about the things they should never do — because they have no way to infer them from the codebase structure alone.</p>
+
+    <h2 data-num="04">What to put in your context foundation</h2>
+
+    <p>After iterating on this for months, here's what actually moves the needle:</p>
+
+    <h3>Architecture decisions with the reasoning</h3>
+    <p>Don't just list the pattern — explain why you chose it. "We use CQRS because write complexity is high and read models need to be independently optimised for performance" gives an agent enough reasoning to apply the pattern correctly in edge cases, not just copy the structure.</p>
+
+    <h3>Anti-patterns explicitly named</h3>
+    <p>The things you've moved away from. Old patterns still exist in the codebase — agents will find them and repeat them unless you explicitly say "we migrated away from X, don't use it." This alone removes a large category of review comments.</p>
+
+    <h3>Component inventory</h3>
+    <p>A list of existing utilities, base classes, and shared services. Agents will write a new date formatter before checking if one exists. Tell them what exists and where to find it.</p>
+
+    <h3>Security and isolation rules as hard constraints</h3>
+    <p>Don't frame these as guidelines. Frame them as rules. "Every query MUST filter by TenantId" is more effective than "remember to filter by TenantId." Agents respond to constraint language.</p>
+
+    <h3>Validation loops</h3>
+    <p>What the agent should do to verify its own output before considering work complete. Run the tests. Check the linter. Confirm no new dependencies were introduced without justification. Building this into the context means agents self-verify instead of waiting for CI to catch failures.</p>
+
+    <div class="callout">
+      <div class="callout-title">Practical tip</div>
+      <p>Keep CLAUDE.md under version control alongside your codebase. When an architecture decision changes, update the context file in the same PR. Treat it as a first-class engineering artifact — because for your agents, it is.</p>
+    </div>
+
+    <h2 data-num="05">What changed in the pipeline</h2>
+
+    <p>My agentic story-to-PR pipeline — 17 agents handling brainstorm through PR creation — ran inconsistently before structured context. Some runs produced clean, reviewable code. Others produced code that worked but violated conventions in ways that would have created maintenance debt.</p>
+
+    <p>After building and maintaining a proper context foundation, the output became consistent enough to trust. Not perfect — agents still miss things — but consistent enough that the validation step catches the misses before they reach review.</p>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-num">10+</div>
+        <div class="result-label">Production releases through the pipeline</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">0</div>
+        <div class="result-label">Customer bugs post-adoption</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num">~80%</div>
+        <div class="result-label">Reduction in architecture-related review comments</div>
+      </div>
+    </div>
+
+    <p>The pattern-related review comments — "use the repository layer," "missing tenant filter," "we don't use static helpers" — almost completely disappeared. Not because the agents got smarter. Because they had the information they needed.</p>
+
+    <h2 data-num="06">The shift this creates</h2>
+
+    <p>Context engineering changes what you spend your time on. Instead of fixing agent output, you're curating what agents know. Instead of catching mistakes in review, you're preventing them in the context definition.</p>
+
+    <p>It also scales in a way that individual prompt tweaks don't. A well-maintained context file helps every agent in every session. A good prompt helps one agent in one session.</p>
+
+    <div class="pull-quote">
+      <p>"You're not training the model. You're training the environment the model operates in. That's a different skill — and a more durable one."</p>
+    </div>
+
+    <p>The engineers who will get the most out of AI agents aren't the ones who write the cleverest prompts. They're the ones who maintain the best-structured, most precise context foundations — so that every agent that touches their codebase starts with the full picture instead of guessing.</p>
+
+    <p>Stop chasing model upgrades. Start engineering context.</p>
+
+    <hr class="article-divider"/>
+
+    <p><em>I write about AI-native engineering, .NET, and production systems. If this was useful, follow along on <a href="https://medium.com/@manjit444manjit" style="color:var(--accent);text-decoration:none">Medium</a> or connect on <a href="https://linkedin.com/in/manjit-sithuraj" style="color:var(--accent);text-decoration:none">LinkedIn</a>.</em></p>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Manjit Sithuraj · <a href="/">smanjit.com</a></p>
+  <p><a href="/blog/">← Back to writing</a></p>
+</footer>
+
+</body>
+</html>
