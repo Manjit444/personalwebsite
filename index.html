@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Manjit Sithuraj — Product Engineer</title>
-<meta name="description" content="Product Engineer specialising in AI systems, .NET, Azure, and Angular. Building intelligent enterprise software for European SaaS."/>
+<title>Manjit Sithuraj — Full Stack Engineer</title>
+<meta name="description" content="Full Stack Engineer in Bengaluru building AI-powered products with .NET, Angular and Azure, from intelligent agents to resilient backends."/>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -307,12 +307,14 @@ footer{flex-direction:column;gap:10px;text-align:center;padding:20px 24px}
 <!-- ─── CONFIG — EDIT THESE ─── -->
 <script>
 const CONFIG = {
-openToWork: true, // ← set false to hide "Open to Opportunities" badge
-showHireMe: true, // ← set false to hide "Hire Me" nav button
+openToWork: false, // ← set true to show "Open to Opportunities" badge
+showHireMe: false, // ← set true to show "Hire Me" nav button
+showResume: false, // ← set true to show "Download Resume" button (hidden until resume is updated)
 email: 'manjit444manjit@gmail.com',
 linkedin: 'https://linkedin.com/in/manjit-sithuraj',
 github: 'https://github.com/manjit444',
 resumeUrl: 'Manjit_Sithuraj_Resume_Print.pdf',
+medium: 'https://medium.com/@manjit444manjit',
 };
 </script>
 
@@ -351,12 +353,12 @@ Open to Opportunities
 <span class="cursor-blink"></span>
 </div>
 <p class="hero-desc fade-up">
-Product Engineer crafting AI-powered enterprise systems for European SaaS —
+Full Stack Engineer building AI-powered products with .NET, Angular and Azure —
 from intelligent agents to resilient backends to the infrastructure that ties them together.
 </p>
 <div class="hero-btns fade-up">
 <a class="btn-primary" href="#experience">View My Work</a>
-<a class="btn-secondary" id="resumeBtn" href="#">Download Resume</a>
+<a class="btn-secondary" id="resumeBtn" href="#" style="display:none">Download Resume</a>
 </div>
 <div class="hero-stats fade-up">
 <div>
@@ -392,8 +394,8 @@ onerror="this.outerHTML='<div class=hero-photo-placeholder>MS</div>'" />
 <div class="about-grid">
 <div class="about-text">
 <p class="fade-up">
-I'm a <strong>Product Engineer</strong> based in Bengaluru, India, currently building
-AI-powered financial reporting tools for Norwegian municipalities at <strong>Framsikt AS</strong>.
+I'm a <strong>Full Stack Engineer</strong> based in Bengaluru, India, currently at <strong>Bolttech</strong>.
+Before that, I spent 3+ years at <strong>Framsikt AS</strong> building AI-powered financial reporting tools for Norwegian municipalities.
 My work sits at the intersection of backend engineering, AI systems, and product thinking.
 </p>
 <p class="fade-up" style="transition-delay:.1s">
@@ -402,9 +404,8 @@ ability to build things that scale. Over 3 years, I've shipped <strong>multi-age
 government API integrations, frontend architecture rewrites, and an 80% cloud cost reduction.
 </p>
 <p class="fade-up" style="transition-delay:.2s">
-Outside work, I co-founded <strong>Cerebral Bridge</strong> — an AI learning platform. I'm also
-working toward a <strong>Germany Masters</strong> in management, because the best engineers
-eventually become the people who decide what gets built.
+Outside work, I co-founded <strong>Cerebral Bridge</strong> — an AI learning platform built as three services,
+from onboarding to an AI tutor engine.
 </p>
 </div>
 <div class="about-cards">
@@ -435,8 +436,15 @@ eventually become the people who decide what gets built.
 <div class="timeline">
 <div class="tl-item fade-up">
 <div class="tl-meta">
-<span class="tl-period">May 2026 — Present</span>
+<span class="tl-period">Oct 2026 — Present</span>
 <span class="tl-badge">Current</span>
+</div>
+<div class="tl-role">Full Stack Developer</div>
+<div class="tl-company">Bolttech, Bengaluru</div>
+</div>
+<div class="tl-item fade-up" style="transition-delay:.1s">
+<div class="tl-meta">
+<span class="tl-period">May 2026 — Oct 2026</span>
 </div>
 <div class="tl-role">Product Engineer</div>
 <div class="tl-company">Framsikt AS, Bengaluru</div>
@@ -449,7 +457,7 @@ eventually become the people who decide what gets built.
 <li>Integrated <strong>Brreg business registry</strong> (CEO sync, 3-year financial history) and dynamic multi-account Azure Storage following 12-Factor App patterns.</li>
 </ul>
 </div>
-<div class="tl-item fade-up" style="transition-delay:.1s">
+<div class="tl-item fade-up" style="transition-delay:.2s">
 <div class="tl-meta">
 <span class="tl-period">Jun 2023 — May 2026</span>
 </div>
@@ -464,7 +472,7 @@ eventually become the people who decide what gets built.
 <li>Established <strong>secretless architecture</strong> with Azure Managed Identities and Key Vault; integrated Plandisc calendar API for 30+ municipalities reducing manual processing from 6 hours to 30 minutes.</li>
 </ul>
 </div>
-<div class="tl-item fade-up" style="transition-delay:.2s">
+<div class="tl-item fade-up" style="transition-delay:.3s">
 <div class="tl-meta">
 <span class="tl-period">Aug 2022 — Apr 2023</span>
 </div>
@@ -491,13 +499,13 @@ eventually become the people who decide what gets built.
 <div class="proj-card fade-up">
 <div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div>
 <div class="proj-name">Cerebral Bridge</div>
-<div class="proj-role">Co-Founder &amp; Architect</div>
+<div class="proj-role">Co-Founder &amp; Architect · Past project</div>
 <p class="proj-desc">3-service AI learning platform — MERN onboarding portal, Python/React AI tutor engine, and .NET notification service via Azure Service Bus. Four AI capabilities: mock interview simulator, lecture summarizer, YouTube quiz generator, real-time Q&amp;A chat.</p>
 <div class="proj-tags">
 <span class="tag">C#</span><span class="tag">Python</span><span class="tag">React</span>
 <span class="tag">MongoDB</span><span class="tag">Azure Service Bus</span><span class="tag">Azure OpenAI</span>
 </div>
-<span class="proj-soon">🔗 Live demo — coming soon</span>
+<span class="proj-soon">Past project — no longer live</span>
 </div>
 <div class="proj-card fade-up" style="transition-delay:.1s">
 <div class="proj-icon"><svg viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
@@ -606,7 +614,7 @@ eventually become the people who decide what gets built.
 <h2 class="sec-title" style="margin-bottom:16px">
 <span class="sec-title-wrap"><span class="sec-title-inner">Let's <span class="accent">connect</span></span></span>
 </h2>
-<p class="contact-sub fade-up">Open to senior engineering roles, product roles, and interesting conversations. Based in Bengaluru — building for European companies since 2023.</p>
+<p class="contact-sub fade-up">Happy to connect about AI systems, .NET, or engineering in general. Based in Bengaluru.</p>
 <div class="contact-links fade-up" id="contactLinks"></div>
 </section>
 
@@ -630,7 +638,9 @@ document.getElementById('navRight').appendChild(cta);
 }
 
 // Resume button
-document.getElementById('resumeBtn').href = CONFIG.resumeUrl;
+const rb = document.getElementById('resumeBtn');
+rb.href = CONFIG.resumeUrl;
+if (CONFIG.showResume) rb.style.display = '';
 
 // Contact links
 const cl = document.getElementById('contactLinks');
@@ -639,6 +649,8 @@ const cl = document.getElementById('contactLinks');
 icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' },
 { href: CONFIG.linkedin, label: 'LinkedIn', target: '_blank',
 icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>' },
+{ href: CONFIG.medium, label: 'Medium', target: '_blank',
+icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
 { href: CONFIG.github, label: 'GitHub', target: '_blank',
 icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S9 17.44 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>' },
 ].forEach(item => {
