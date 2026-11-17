@@ -168,6 +168,17 @@ New homepage blocks should get `class="fade-up"` and a small `transition-delay` 
 - Links leaving the site: `target="_blank" rel="noopener"`.
 - Internal links on blog pages are root-relative (`/blog/…`, `/`); homepage links are relative (`blog/`).
 
+### Publishing workflow (always in this order)
+
+1. **Website first:** publish the post on smanjit.com/blog (this is the original/canonical copy).
+2. **Medium second:** republish the same post on Medium using **Import a story** with the smanjit.com URL,
+   so Medium sets the canonical link back to the website.
+3. **LinkedIn last:** a short note (3–5 lines: the hook, one key takeaway) sharing the **Medium** link.
+
+**Images:** every post uses **3 images**: 1 cover (`blog/images/<slug>-cover.png`) + 2 in-body
+(`blog/images/<slug>-<name>.png`). Reuse the same 3 images on Medium; use the cover on LinkedIn.
+All images need meaningful `alt` text and must contain nothing confidential (blur names, IDs, internal URLs).
+
 ### Writing style (for drafting or editing post copy)
 
 - First person, from things actually built and shipped. Problem → what I tried → what worked → results → takeaway.
