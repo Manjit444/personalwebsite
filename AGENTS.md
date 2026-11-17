@@ -28,6 +28,7 @@ Personal portfolio + technical blog for Manjit Sithuraj, served at **https://sma
 ├── profile.jpg                # Hero photo (rendered grayscale, colour on hover)
 ├── Manjit_Sithuraj_Resume_Print.pdf   # Linked from the "Download Resume" button
 ├── CNAME                      # smanjit.com — never edit or delete
+├── _config.yml                # Jekyll config: excludes AGENTS.md / CLAUDE.md from the Pages build
 ├── AGENTS.md / CLAUDE.md      # Agent context (this file)
 └── blog/
     ├── index.html             # Blog listing with tag filter

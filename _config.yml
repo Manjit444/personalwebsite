@@ -1,0 +1,5 @@
+# GitHub Pages (Jekyll) config.
+# Agent/docs files contain {{ }} examples that break Liquid, and should not be published.
+exclude:
+  - AGENTS.md
+  - CLAUDE.md
